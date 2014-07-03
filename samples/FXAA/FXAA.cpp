@@ -195,6 +195,7 @@ void FXAA::initRendering(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, m_sphereVBO);
 	glBufferData(GL_ARRAY_BUFFER, m_sphereBufferSize, buf, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	delete[] buf;
 
 	int i;
 	void* pData=0;
