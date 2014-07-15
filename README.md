@@ -20,3 +20,9 @@ What to Read Next:
 * [Overview of App Framework and Libraries](http://docs.nvidia.com/gameworks/index.html#gameworkslibrary/graphicssamples/opengl_samples/index-framework.htm)
 ** Details the cross-platform application framework and other support libraries, along with links to class/structure documentation.
 
+Providing Pull Requests:
+------------------------
+NVIDIA is happy to review and consider pull requests for merging into the main tree of the samples for bug fixes and features. Before providing a pull request to NVIDIA, please note the following:
+* A pull request provided to this repo by a developer constitutes permission from the developer for NVIDIA to merge the provided changes or any NVIDIA modified version of these changes to the repo. NVIDIA may remove or change the code at any time and in any way deemed appropriate.
+* Not all pull requests can be or will be accepted. NVIDIA will close pull requests that it does not intend to merge.
+* The modified files and any new files must include the unmodified NVIDIA copyright header seen at the top of all shipping files. 
