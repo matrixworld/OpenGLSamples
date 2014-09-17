@@ -23,7 +23,7 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-14</AndroidTargetAPI>
+		<AndroidTargetAPI>android-16</AndroidTargetAPI>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'" Label="Configuration">
 		<ConfigurationType>Application</ConfigurationType>
@@ -31,7 +31,7 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-14</AndroidTargetAPI>
+		<AndroidTargetAPI>android-16</AndroidTargetAPI>
 	</PropertyGroup>
 	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 	<ImportGroup Label="ExtensionSettings">
@@ -44,7 +44,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../bin/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/TextureArrayTerrain/Tegra-Android/debug</IntDir>
+		<IntDir>./intermediate/TextureArrayTerrain/Tegra-Android/debug/</IntDir>
 		<TargetExt>.so</TargetExt>
 		<TargetName>libTextureArrayTerrain</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -55,14 +55,14 @@
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../TextureArrayTerrain;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es2-aurora/TextureArrayTerrain;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES2;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 		</ClCompile>
 		<Link>
-			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -lGLESv2 -landroid -lm -Wl,--end-group</AdditionalOptions>
+			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -landroid -lm -lGLESv2 -Wl,--end-group</AdditionalOptions>
 			<OutputFile>$(OutDir)libTextureArrayTerrain.so</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/Tegra-Android;./../../../extensions/lib/Tegra-Android;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/libTextureArrayTerrain.so.pdb</ProgramDatabaseFile>
@@ -70,8 +70,8 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../TextureArrayTerrain</AntBuildPath>
-			<JavaSourceDir>src/../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
+			<AntBuildPath>$(ProjectDir)./../../es2-aurora/TextureArrayTerrain</AntBuildPath>
+			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
 		</AntBuild>
@@ -83,7 +83,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../bin/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/TextureArrayTerrain/Tegra-Android/release</IntDir>
+		<IntDir>./intermediate/TextureArrayTerrain/Tegra-Android/release/</IntDir>
 		<TargetExt>.so</TargetExt>
 		<TargetName>libTextureArrayTerrain</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -94,14 +94,14 @@
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../TextureArrayTerrain;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es2-aurora/TextureArrayTerrain;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES2;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 		</ClCompile>
 		<Link>
-			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -lGLESv2 -landroid -lm -Wl,--end-group</AdditionalOptions>
+			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -landroid -lm -lGLESv2 -Wl,--end-group</AdditionalOptions>
 			<OutputFile>$(OutDir)libTextureArrayTerrain.so</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/Tegra-Android;./../../../extensions/lib/Tegra-Android;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/libTextureArrayTerrain.so.pdb</ProgramDatabaseFile>
@@ -109,8 +109,8 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../TextureArrayTerrain</AntBuildPath>
-			<JavaSourceDir>src/../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
+			<AntBuildPath>$(ProjectDir)./../../es2-aurora/TextureArrayTerrain</AntBuildPath>
+			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
 		</AntBuild>
@@ -125,32 +125,48 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 	</PropertyGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainGenerator.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainGenerator.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainSim.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSim.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainSimRenderer.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimRenderer.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainSimThread.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimThread.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TextureArrayTerrain.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TextureArrayTerrain.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\TextureArrayTerrain\Array2D.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\Array2D.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\IBOBuild.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\IBOBuild.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\RidgedMultiFractal.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\RidgedMultiFractal.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainGenerator.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainGenerator.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainSim.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSim.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainSimRenderer.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimRenderer.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainSimThread.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimThread.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TextureArrayTerrain.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TextureArrayTerrain.h">
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\skybox.frag">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain.frag">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain_es2.frag">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain_es3.frag">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\skybox.vert">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain.vert">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain_es3.vert">
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="./../../../extensions/externals/build/vs2010android/Half.vcxproj">

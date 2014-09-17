@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvGLUtils/NvGLSLProgram.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -82,6 +82,25 @@ public:
     /// \return a pointer to an #NvGLSLProgram on success and NULL on failure
     static NvGLSLProgram* createFromStrings(const char* vertSrc, const char* fragSrc, bool strict = false);
 
+    /// Creates and returns a shader object from a pair of arrays of source strings
+    /// Convenience function.
+    /// \param[in] vertSrcArray the array of null-terminated strings containing the vertex shader source
+    /// \param[in] vertSrcCount the number of strings in vertSrcArray
+    /// \param[in] fragSrcArray the array of null-terminated strings containing the fragment shader source
+    /// \param[in] fragSrcCount the number of strings in fragSrcArray
+    /// \param[in] strict if set to true, then later calls to retrieve the locations of non-
+    /// existent uniforms and vertex attributes will log a warning to the output
+    /// \return a pointer to an #NvGLSLProgram on success and NULL on failure
+    static NvGLSLProgram* createFromStrings(const char** vertSrcArray, int32_t vertSrcCount, 
+        const char** fragSrcArray, int32_t fragSrcCount, bool strict = false);
+
+    /// Sets a global shader text header to be prepended to all shaders created through
+    /// this class.  This can be useful in cases where the shaders need a different version
+    /// header on different platforms.
+    /// \param[in] header the string to be appended or NULL if no header.  NULL also
+    /// disables the feature as desired.  String is not copied or destroyed.
+    static void setGlobalShaderHeader(const char* header) { ms_shaderHeader = header; }
+
     /// Initializes an existing shader object from a pair of filenames/paths
     /// Uses #NvAssetLoaderRead to load the files.  Convenience function.
     /// \param[in] vertFilename the filename and partial path to the text file containing the vertex shader source
@@ -98,6 +117,16 @@ public:
     /// existent uniforms and vertex attributes will log a warning to the output
     /// \return true on success and false on failure
     bool setSourceFromStrings(const char* vertSrc, const char* fragSrc, bool strict = false);
+
+    /// Creates and returns a shader object from a pair of source strings
+    /// Convenience function.
+    /// \param[in] vertSrc the null-terminated string containing the vertex shader source
+    /// \param[in] fragSrc the null-terminated string containing the fragment shader source
+    /// \param[in] strict if set to true, then later calls to retrieve the locations of non-
+    /// existent uniforms and vertex attributes will log a warning to the output
+    /// \return a pointer to an #NvGLSLProgram on success and NULL on failure
+    bool setSourceFromStrings(const char** vertSrcArray, int32_t vertSrcCount, const char** fragSrcArray, 
+        int32_t fragSrcCount, bool strict = false);
 
     /// Creates and returns a shader object from an array of #ShaderSourceItem source objects
     /// \param[in] src an array of #ShaderSourceItem objects containing the shaders sources to
@@ -130,6 +159,22 @@ public:
     /// \param[unit] the texture unit which will be used for the texture
     /// \param[tex] the texture to be bound
     void bindTexture2D(GLint index, int32_t unit, GLuint tex);
+
+    /// Binds a Rect texture to a shader uniform by name.
+    /// Binds the given texture to the supplied texture unit and the unit to the given uniform
+    /// Assumes that the given shader is bound via #enable
+    /// \param[in] name the null-terminated string name of the uniform
+    /// \param[unit] the texture unit which will be used for the texture
+    /// \param[tex] the texture to be bound
+    void bindTextureRect(const char *name, int32_t unit, GLuint tex);
+
+    /// Binds a Rect texture to a shader uniform by index.
+    /// Binds the given texture to the supplied texture unit and the unit to the given uniform
+    /// Assumes that the given shader is bound via #enable
+    /// \param[in] index the index of the uniform
+    /// \param[unit] the texture unit which will be used for the texture
+    /// \param[tex] the texture to be bound
+    void bindTextureRect(GLint index, int32_t unit, GLuint tex);
 
     /// Binds an array texture to a shader uniform by name.
     /// Binds the given texture to the supplied texture unit and the unit to the given uniform
@@ -291,12 +336,38 @@ public:
 protected:
     bool checkCompileError(GLuint object, int32_t target);
     GLuint compileProgram(const char *vsource, const char *fsource);
+    GLuint compileProgram(const char** vertSrcArray, int32_t vertSrcCount, 
+        const char** fragSrcArray, int32_t fragSrcCount);
     GLuint compileProgram(ShaderSourceItem* src, int32_t count);
 
     bool m_strict;
     GLuint m_program;
 
     static bool ms_logAllMissing;
+    static const char* ms_shaderHeader;
+};
+
+/// Convenience class to automatically push and pop a shader prefix
+/// using scoped auto-destruction.  The following code:
+/// \code
+///     {
+///         NvScopedShaderPrefix prefix("prefix code");
+///         // ... my block of prefixed code
+///     }
+/// \endcode
+/// Is equivalent to:
+/// \code
+///     {
+///         NvGLSLProgram::setGlobalShaderHeader("prefix code");
+///         // ... my block of prefixed code
+///         NvGLSLProgram::setGlobalShaderHeader(NULL);
+///     }
+/// \endcode
+class NvScopedShaderPrefix
+{
+public:
+    NvScopedShaderPrefix(const char* prefix) { NvGLSLProgram::setGlobalShaderHeader(prefix); }
+    ~NvScopedShaderPrefix() { NvGLSLProgram::setGlobalShaderHeader(NULL); }
 };
 
 #endif // NV_GLSL_PROGRAM_H

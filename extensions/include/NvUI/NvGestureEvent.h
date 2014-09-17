@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvUI/NvGestureEvent.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -59,6 +59,7 @@ struct NvInputEventClass {
         MOUSE, /**< Mouse input */
         TOUCH, /**< Touch input */
         STYLUS,  /**< Stylus input */
+        MAX
     };
 };
 
@@ -183,6 +184,9 @@ public:
 
     /* no timestamp embedded at the moment.  does anyone need it?  could do a
      *  8.8 fixedpoint elapsed seconds dt or something like that. */
+
+    /** Default constructor, for use as simple struct. */
+    NvGestureEvent() { /* no-op */ };
 
     /** General constructor.
         @param intype The input device generating the event

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/EngineAndroid.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -152,9 +152,15 @@ public:
     virtual void setAppTitle(const char* title) { /* TODO if anything we can do... */ }
     virtual const std::vector<std::string>& getCommandLine() { return m_commandLine; }
 
+    virtual NvRedrawMode::Enum getRedrawMode();
+    virtual void setRedrawMode(NvRedrawMode::Enum mode);
+    virtual void requestRedraw();
+
     struct android_app* mApp;
+    NvAppBase* mAppBase;
 
     int32_t mForceRender;
+    bool mRedraw;
     bool mResizePending;
     NvEGLUtil* mEGL;
     struct saved_state mState;
@@ -169,9 +175,13 @@ public:
     int32_t handleInput(AInputEvent* event);
     void handleCommand(int32_t cmd);
 
-    void requestForceRender() { if (mForceRender < 4) mForceRender = 4; }
+    void requestForceRender() { mForceRender = 1; }
+
+    bool useChoreographer(bool use);
 
     std::vector<std::string> m_commandLine;
+
+    NvRedrawMode::Enum mRedrawMode;
 };
 
 #endif

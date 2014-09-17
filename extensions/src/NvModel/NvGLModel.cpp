@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvModel/NvGLModel.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -84,11 +84,14 @@ void NvGLModel::rescaleModel(float radius)
     model->rescaleToOrigin(radius);
 }
 
-void NvGLModel::initBuffers(bool computeTangents)
+void NvGLModel::initBuffers(bool computeTangents, bool computeNormals)
 {
-    model->computeNormals();
+	if(computeNormals)
+	{
+		model->computeNormals();
+	}
     
-    if (computeTangents)
+    if (computeNormals || computeTangents)
     {
         model->computeTangents();
     }
@@ -108,13 +111,13 @@ void NvGLModel::initBuffers(bool computeTangents)
 }
 
 
-inline void NvGLModel::bindBuffers()
+void NvGLModel::bindBuffers()
 {
     glBindBuffer(GL_ARRAY_BUFFER, model_vboID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model_iboID);
 }
 
-inline void NvGLModel::unbindBuffers()
+void NvGLModel::unbindBuffers()
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

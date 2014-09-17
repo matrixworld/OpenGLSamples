@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvSampleApp.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -39,6 +39,7 @@
 #include "NvGLUtils/NvImage.h"
 #include "NvGLUtils/NvSimpleFBO.h"
 #include "NvGLUtils/NvTimers.h"
+#include "NvUI/NvGestureDetector.h"
 #include "NvUI/NvTweakBar.h"
 #include "NV/NvString.h"
 #include "NV/NvTokenizer.h"
@@ -69,8 +70,11 @@ NvSampleApp::NvSampleApp(NvPlatformContext* platform, const char* appTitle) :
     , m_testModeIssues(TEST_MODE_ISSUE_NONE)
 {
     m_transformer = new NvInputTransformer;
-    mFrameTimer = createStopWatch();
     memset(mLastPadState, 0, sizeof(mLastPadState));
+
+    mFrameTimer = createStopWatch();
+
+    mEventTickTimer = createStopWatch();
 
     mAutoRepeatTimer = createStopWatch();
     mAutoRepeatButton = 0; // none yet! :)
@@ -114,6 +118,9 @@ NvSampleApp::~NvSampleApp()
 { 
     // clean up internal allocs
     delete mFrameTimer;
+    delete mEventTickTimer;
+    delete mAutoRepeatTimer;
+
     delete m_transformer;
 }
 
@@ -195,7 +202,7 @@ void NvSampleApp::baseInitUI(void) {
     // safe to now pass through title to platform layer...
     if (!mAppTitle.empty())
         mPlatform->setAppTitle(mAppTitle.c_str());
-
+    
     if (!mUIWindow) {
         const int32_t w = getGLContext()->width(), h = getGLContext()->height();
         mUIWindow = new NvUIWindow((float)w, (float)h);
@@ -225,12 +232,13 @@ void NvSampleApp::baseInitUI(void) {
 
             mTweakTab = new NvUIButton(NvUIButtonType::CHECK, TWEAKBAR_ACTIONCODE_BASE, els);
             mTweakTab->SetHitMargin(high/2, high/2);
+            mTweakTab->SetReactOnPress(true); // do its reaction on the press, eff ignoring release.
             mUIWindow->Add(mTweakTab, high*0.25f, mTweakBar->GetStartOffY()+high*0.125f);
         }
 
         CHECK_GL_ERROR();
     }
-
+    
     initUI();
 }
 
@@ -249,7 +257,8 @@ void NvSampleApp::baseReshape(int32_t w, int32_t h) {
     m_width = w;
     m_height = h;
 
-    mUIWindow->HandleReshape((float)w, (float)h);
+    if (mUIWindow)
+        mUIWindow->HandleReshape((float)w, (float)h);
 
     m_transformer->setScreenSize(w, h);
 
@@ -268,7 +277,13 @@ void NvSampleApp::baseDrawUI(void) {
 
     if (mUIWindow && mUIWindow->GetVisibility()) {
         if (mFPSText) {
+#if 1
             mFPSText->SetValue(mFramerate->getMeanFramerate());
+#else
+            char str[256];
+            sprintf(str, "%.3f (%.3f)", mFramerate->getMeanFramerate(), mDrawRate); 
+            mFPSText->SetString(str);
+#endif
         }
         NvUST time = 0;
         NvUIDrawState ds(time, getGLContext()->width(), getGLContext()->height());
@@ -278,12 +293,13 @@ void NvSampleApp::baseDrawUI(void) {
     drawUI();
 }
 
-void NvSampleApp::baseFocusChanged(bool focused) {
-    focusChanged(focused);
-}
-
 void NvSampleApp::baseHandleReaction() {
     NvUIEventResponse r;
+    if (!mUIWindow) return;
+
+    if (mPlatform->getRedrawMode() == NvRedrawMode::ON_DEMAND)
+        mPlatform->requestRedraw();
+
     const NvUIReaction& react = NvUIElement::GetReaction();
     // we let the UI handle any reaction first, in case there
     // are interesting side-effects such as updating variables...
@@ -294,66 +310,81 @@ void NvSampleApp::baseHandleReaction() {
 }
 
 void NvSampleApp::syncValue(NvTweakVarBase *var) {
+    if (!mUIWindow) return;
     NvUIReaction &react = mUIWindow->GetReactionEdit(true);
     react.code = var->getActionCode();
     react.flags = NvReactFlag::FORCE_UPDATE;
     baseHandleReaction();
 }
 
-bool NvSampleApp::pointerInput(NvInputDeviceType::Enum device, NvPointerActionType::Enum action, 
-    uint32_t modifiers, int32_t count, NvPointerEvent* points) {
-    NvUST time = 0;
-    static bool isDown = false;
-    static float startX = 0, startY = 0;
-    bool isButtonEvent = (action==NvPointerActionType::DOWN)||(action==NvPointerActionType::UP);
-    if (isButtonEvent)
-        isDown = (action==NvPointerActionType::DOWN);
 
-    if (mUIWindow!=NULL) {
-        NvInputEventClass::Enum giclass = NvInputEventClass::MOUSE; // default to mouse
-        NvGestureKind::Enum gikind;
-        // override for non-mouse device.
-        if (device==NvInputDeviceType::STYLUS)
-            giclass = NvInputEventClass::STYLUS;
-        else if (device==NvInputDeviceType::TOUCH)
-            giclass = NvInputEventClass::TOUCH;
-        // since not using a heavyweight gesture detection system,
-        // determine reasonable kind/state to pass along here.
-        if (isButtonEvent)
-            gikind = (isDown ? NvGestureKind::PRESS : NvGestureKind::RELEASE);
-        else
-            gikind = (isDown ? NvGestureKind::DRAG : NvGestureKind::HOVER);
-        float x=0, y=0;
-        if (count)
-        {
-            x = points[0].m_x;
-            y = points[0].m_y;
-        }
-        NvGestureEvent gesture(giclass, gikind, x, y);
-        if (isButtonEvent)
-        {
-            if (isDown)
-            {
-                startX = x;
-                startY = y;
-            }
-        }
-        else if (isDown)
-        {
-            gesture.x = startX;
-            gesture.y = startY;
-            gesture.dx = x - startX;
-            gesture.dy = y - startY;
-        }
-        NvUIEventResponse r = mUIWindow->HandleEvent(gesture, time, NULL);
-        if (r&nvuiEventHandled) 
-        {
+bool NvSampleApp::handleGestureEvents()
+{
+    bool wasHandled = false;
+    if (!mUIWindow) return wasHandled;
+
+    NvGestureQueueEvent *gqe;
+    while (NULL != (gqe = NvGestureGetNextEvent())) {
+        NvUIEventResponse r = mUIWindow->HandleEvent(gqe->gesture, gqe->time, NULL);
+        NvFreeGQEvent(gqe); // must free after processing.
+
+        // if we handled an event
+        if (r&nvuiEventHandled) {
+            // flag that we did...
+            wasHandled = true;
             if (r&nvuiEventHadReaction)
                 baseHandleReaction();
-            return true;
         }
     }
 
+    return wasHandled;
+}
+
+bool NvSampleApp::pointerInput(NvInputDeviceType::Enum device, NvPointerActionType::Enum action, 
+    uint32_t modifiers, int32_t count, NvPointerEvent* points, int64_t timestamp) {
+
+    // In on-demand rendering mode, we trigger a redraw on any input
+    if (mPlatform->getRedrawMode() == NvRedrawMode::ON_DEMAND)
+        mPlatform->requestRedraw();
+
+    // if have window, setup up and pass input events along as processed gestures
+    if (mUIWindow!=NULL) {
+        static bool isDown = false;
+        bool isButtonEvent = (action==NvPointerActionType::DOWN)||(action==NvPointerActionType::UP);
+        if (isButtonEvent)
+            isDown = (action==NvPointerActionType::DOWN);
+
+        NvInputEventClass::Enum giclass = NvInputEventClass::MOUSE; // default to mouse
+        if (device==NvInputDeviceType::STYLUS) giclass = NvInputEventClass::STYLUS;
+        else if (device==NvInputDeviceType::TOUCH) giclass = NvInputEventClass::TOUCH;
+        
+        // need a better way to do this, should be part of the input, in case of multiple inputs at same time.
+        NvGestureSetInputType(giclass);
+        
+        // remap nvpointer to nvgesture.  in the future, we should do higher up in framework.
+        NvGestureInputData gidata;
+        memset(&gidata, 0, sizeof(gidata));
+        if (isDown) gidata.countDown = (uint8_t)count;
+        gidata.x = (int32_t)points[0].m_x;
+        gidata.y = (int32_t)points[0].m_y;
+        if (count>1) {
+            gidata.x2 = (int32_t)points[1].m_x;
+            gidata.y2 = (int32_t)points[1].m_y;
+        }
+
+        // reset our tick timer, which allows us to generate gestures in mainloop.
+        mEventTickTimer->start();
+
+        // add current input to gesture system
+        NvGestureAddInput(timestamp, &gidata);
+
+        // let the UI system try to handle...
+        if (handleGestureEvents())
+            return true; // we handled something, so don't pass pointer to app/framework.
+    }
+
+    // if UI system didn't handle, we pass pointer inside the app framework.
+    // TODO: might add support for passing gesture events instead.
     if (handlePointerInput(device, action, modifiers, count, points))
         return true;
     else
@@ -368,6 +399,9 @@ void NvSampleApp::addTweakKeyBind(NvTweakVarBase *var, uint32_t incKey, uint32_t
 }
 
 bool NvSampleApp::keyInput(uint32_t code, NvKeyActionType::Enum action) {
+    if (mPlatform->getRedrawMode() == NvRedrawMode::ON_DEMAND)
+        mPlatform->requestRedraw();
+
     // only do down and repeat for now.
     if (NvKeyActionType::UP!=action) {
         NvAppKeyBind::const_iterator bind = mKeyBinds.find(code);
@@ -403,7 +437,7 @@ bool NvSampleApp::keyInput(uint32_t code, NvKeyActionType::Enum action) {
         switch(code)
         {
             case NvKey::K_TAB: {
-                if (NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
+                if (!mUIWindow || NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
                 NvUIReaction &react = mUIWindow->GetReactionEdit(true);
                 react.code = TWEAKBAR_ACTIONCODE_BASE;
                 react.state = mTweakBar->GetVisibility() ? 0 : 1;
@@ -411,30 +445,32 @@ bool NvSampleApp::keyInput(uint32_t code, NvKeyActionType::Enum action) {
                 break;
             }
             case NvKey::K_ARROW_DOWN: {
-                if (NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
+                if (!mUIWindow || NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::MOVE_DOWN);
                 break;
             }
             case NvKey::K_ARROW_UP: {
-                if (NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
+                if (!mUIWindow || NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::MOVE_UP);
                 break;
             }
             case NvKey::K_ENTER: {
-                if (NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
+                if (!mUIWindow || NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_PRESS);
                 break;
             }
             case NvKey::K_BACKSPACE: {
-                if (NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
+                if (!mUIWindow || NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::FOCUS_CLEAR);
                 break;
             }
             case NvKey::K_ARROW_LEFT: {
+                if (!mUIWindow) break;
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_DEC);
                 break;
             }
             case NvKey::K_ARROW_RIGHT: {
+                if (!mUIWindow) break;
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_INC);
                 break;
             }
@@ -458,6 +494,10 @@ bool NvSampleApp::keyInput(uint32_t code, NvKeyActionType::Enum action) {
 }
 
 bool NvSampleApp::characterInput(uint8_t c) {
+    // In on-demand rendering mode, we trigger a redraw on any input
+    if (mPlatform->getRedrawMode() == NvRedrawMode::ON_DEMAND)
+        mPlatform->requestRedraw();
+
     if (handleCharacterInput(c))
         return true;
     return false;
@@ -476,6 +516,10 @@ bool NvSampleApp::gamepadButtonChanged(uint32_t button, bool down) {
         mAutoRepeatTriggered = false;
         mAutoRepeatTimer->stop();
     }
+
+    // In on-demand rendering mode, we trigger a redraw on any input
+    if (mPlatform->getRedrawMode() == NvRedrawMode::ON_DEMAND)
+        mPlatform->requestRedraw();
 
     // currently, we only react on the button DOWN
     if (down) {
@@ -513,6 +557,7 @@ bool NvSampleApp::gamepadButtonChanged(uint32_t button, bool down) {
         NvUIEventResponse r = nvuiEventNotHandled;
         switch(button) {
             case NvGamepad::BUTTON_START: {
+                if (!mUIWindow) break;
                 NvUIReaction &react = mUIWindow->GetReactionEdit(true);
                 react.code = TWEAKBAR_ACTIONCODE_BASE;
                 react.state = mTweakBar->GetVisibility() ? 0 : 1;
@@ -524,28 +569,34 @@ bool NvSampleApp::gamepadButtonChanged(uint32_t button, bool down) {
                 return true;
             }
             case NvGamepad::BUTTON_DPAD_DOWN: {
+                if (!mUIWindow) break;
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::MOVE_DOWN);
                 break;
             }
             case NvGamepad::BUTTON_DPAD_UP: {
+                if (!mUIWindow) break;
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::MOVE_UP);
                 break;
             }
             case NvGamepad::BUTTON_A: {
+                if (!mUIWindow) break;
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_PRESS);
                 break;
             }
             case NvGamepad::BUTTON_B: {
+                if (!mUIWindow) break;
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::FOCUS_CLEAR);
                 break;
             }
             case NvGamepad::BUTTON_DPAD_LEFT: {
+                if (!mUIWindow) break;
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_DEC);
                 mAutoRepeatTimer->start();
                 mAutoRepeatButton = button;
                 break;
             }
             case NvGamepad::BUTTON_DPAD_RIGHT: {
+                if (!mUIWindow) break;
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_INC);
                 mAutoRepeatTimer->start();
                 mAutoRepeatButton = button;
@@ -565,6 +616,9 @@ bool NvSampleApp::gamepadButtonChanged(uint32_t button, bool down) {
 }
 
 bool NvSampleApp::gamepadChanged(uint32_t changedPadFlags) {
+    // In on-demand rendering mode, we trigger a redraw on any input
+    if (mPlatform->getRedrawMode() == NvRedrawMode::ON_DEMAND)
+        mPlatform->requestRedraw();
 
     if (handleGamepadChanged(changedPadFlags))
         return true;
@@ -614,6 +668,11 @@ void NvSampleApp::mainLoop() {
     mFramerate = new NvFramerateCounter(this);
 
     mFrameTimer->start();
+
+    mSumDrawTime = 0.0f;
+    mDrawTimeFrames = 0;
+    mDrawRate = 0.0f;
+    NvStopWatch* drawTime = createStopWatch();
 
     while (getPlatformContext()->isAppRunning() && !isExiting()) {
         bool needsReshape = false;
@@ -679,6 +738,13 @@ void NvSampleApp::mainLoop() {
             if (!isExiting()) {
                 mFrameTimer->start();
 
+                if (mEventTickTimer->getTime()>=0.05f) {
+                    mEventTickTimer->start(); // reset and continue...
+                    if (NvGestureTick(NvTimeGetTime()))
+                        handleGestureEvents();
+                }
+
+                // Handle automatic repeating buttons.
                 if (mAutoRepeatButton) {
                     const float elapsed = mAutoRepeatTimer->getTime();
                     if ( (!mAutoRepeatTriggered && elapsed >= 0.5f) ||
@@ -687,6 +753,8 @@ void NvSampleApp::mainLoop() {
                         gamepadButtonChanged(mAutoRepeatButton, true);
                     }
                 }
+
+                drawTime->start();
 
                 baseDraw();
                 CHECK_GL_ERROR(); // sanity catch errors
@@ -717,10 +785,23 @@ void NvSampleApp::mainLoop() {
 
                 SwapBuffers();
 
+                drawTime->stop();
+                mSumDrawTime += drawTime->getTime();
+                drawTime->reset();
+
+                mDrawTimeFrames++;
+                if (mDrawTimeFrames > 10) {
+                    mDrawRate = mDrawTimeFrames / mSumDrawTime;
+                    mDrawTimeFrames = 0;
+                    mSumDrawTime = 0.0f;
+                }
+
                 if (mFramerate->nextFrame()) {
+#if later
                     // for now, disabling console output of fps as we have on-screen.
                     // makes it easier to read USEFUL log output messages.
                     LOGI("fps: %.2f", mFramerate->getMeanFramerate());
+#endif
                 }
             }
 
@@ -774,15 +855,19 @@ bool NvSampleApp::requireMinAPIVersion(const NvGfxAPIVersion& minApi, bool exitO
     if (api < minApi) {
         if (exitOnFailure) {
             char caption [1024];
+#ifdef _WIN32
 #pragma warning( push )
 #pragma warning( disable : 4996 )
+#endif
             sprintf(caption, "The current system does not appear to support the minimum GL API required "
                 "by the sample (requested: %s %d.%d, got: %s %d.%d).  This is likely because the system's GPU or driver "
                 "does not support the API.  Please see the sample's source code for details", 
                 (minApi.api == NvGfxAPI::GL) ? "GL" : "GLES", 
                 minApi.majVersion, minApi.minVersion,
                 (api.api == NvGfxAPI::GL) ? "GL" : "GLES", api.majVersion, api.minVersion);
+#ifdef _WIN32
 #pragma warning( pop )
+#endif
             errorExit(caption);
         }
 

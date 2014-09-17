@@ -23,7 +23,7 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-14</AndroidTargetAPI>
+		<AndroidTargetAPI>android-18</AndroidTargetAPI>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'" Label="Configuration">
 		<ConfigurationType>Application</ConfigurationType>
@@ -31,7 +31,7 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-14</AndroidTargetAPI>
+		<AndroidTargetAPI>android-18</AndroidTargetAPI>
 	</PropertyGroup>
 	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 	<ImportGroup Label="ExtensionSettings">
@@ -44,7 +44,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../bin/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/ComputeBasicGLSL/Tegra-Android/debug</IntDir>
+		<IntDir>./intermediate/ComputeBasicGLSL/Tegra-Android/debug/</IntDir>
 		<TargetExt>.so</TargetExt>
 		<TargetName>libComputeBasicGLSL</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -55,14 +55,14 @@
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../ComputeBasicGLSL/assets/shaders;./../../ComputeBasicGLSL;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;USE_REGAL=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/ComputeBasicGLSL/assets/shaders;./../../es3aep-kepler/ComputeBasicGLSL;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES3_1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 		</ClCompile>
 		<Link>
-			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -lGLESv2 -landroid -lm -lsupc++ -lgcc -lRegalW_static -Wl,--end-group</AdditionalOptions>
+			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -landroid -lm -lGLESv3 -Wl,--end-group</AdditionalOptions>
 			<OutputFile>$(OutDir)libComputeBasicGLSL.so</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/Tegra-Android;./../../../extensions/lib/Tegra-Android;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/libComputeBasicGLSL.so.pdb</ProgramDatabaseFile>
@@ -70,8 +70,8 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../ComputeBasicGLSL</AntBuildPath>
-			<JavaSourceDir>src/../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
+			<AntBuildPath>$(ProjectDir)./../../es3aep-kepler/ComputeBasicGLSL</AntBuildPath>
+			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
 		</AntBuild>
@@ -83,7 +83,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../bin/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/ComputeBasicGLSL/Tegra-Android/release</IntDir>
+		<IntDir>./intermediate/ComputeBasicGLSL/Tegra-Android/release/</IntDir>
 		<TargetExt>.so</TargetExt>
 		<TargetName>libComputeBasicGLSL</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -94,14 +94,14 @@
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../ComputeBasicGLSL/assets/shaders;./../../ComputeBasicGLSL;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;USE_REGAL=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/ComputeBasicGLSL/assets/shaders;./../../es3aep-kepler/ComputeBasicGLSL;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES3_1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 		</ClCompile>
 		<Link>
-			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -lGLESv2 -landroid -lm -lsupc++ -lgcc -lRegalW_static -Wl,--end-group</AdditionalOptions>
+			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -landroid -lm -lGLESv3 -Wl,--end-group</AdditionalOptions>
 			<OutputFile>$(OutDir)libComputeBasicGLSL.so</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/Tegra-Android;./../../../extensions/lib/Tegra-Android;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/libComputeBasicGLSL.so.pdb</ProgramDatabaseFile>
@@ -109,8 +109,8 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../ComputeBasicGLSL</AntBuildPath>
-			<JavaSourceDir>src/../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
+			<AntBuildPath>$(ProjectDir)./../../es3aep-kepler/ComputeBasicGLSL</AntBuildPath>
+			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
 		</AntBuild>
@@ -125,10 +125,18 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 	</PropertyGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\ComputeBasicGLSL\ComputeBasicGLSL.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeBasicGLSL\ComputeBasicGLSL.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\ComputeBasicGLSL\ComputeBasicGLSL.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeBasicGLSL\ComputeBasicGLSL.h">
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es3aep-kepler\ComputeBasicGLSL\assets\shaders\invert.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeBasicGLSL\assets\shaders\plain.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeBasicGLSL\assets\shaders\plain.vert">
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="./../../../extensions/externals/build/vs2010android/Half.vcxproj">

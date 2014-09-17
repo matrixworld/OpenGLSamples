@@ -5,44 +5,71 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainGenerator.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainGenerator.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainSim.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSim.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainSimRenderer.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimRenderer.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainSimThread.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimThread.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TextureArrayTerrain.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TextureArrayTerrain.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\TextureArrayTerrain\Array2D.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\Array2D.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\IBOBuild.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\IBOBuild.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\RidgedMultiFractal.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\RidgedMultiFractal.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainGenerator.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainGenerator.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainSim.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSim.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainSimRenderer.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimRenderer.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainSimThread.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimThread.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TextureArrayTerrain.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TextureArrayTerrain.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\skybox.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain_es2.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain_es3.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\skybox.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain_es3.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

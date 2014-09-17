@@ -5,10 +5,10 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\PathRenderingBasic\PathRenderingBasic.cpp">
+		<ClCompile Include="..\..\gl4-kepler\PathRenderingBasic\PathRenderingBasic.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\PathRenderingBasic\PathRenderingBasic.h">
+		<ClInclude Include="..\..\gl4-kepler\PathRenderingBasic\PathRenderingBasic.h">
 			<Filter>src</Filter>
 		</ClInclude>
 	</ItemGroup>

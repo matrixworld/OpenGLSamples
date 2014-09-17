@@ -4,8 +4,4 @@
     <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;release|Tegra-Android&apos;" />
     <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;debug|Tegra-Android&apos;" />
     <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;release|Tegra-Android&apos;" />
-    <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;debug|Tegra-Android&apos;" />
-    <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;release|Tegra-Android&apos;" />
-    <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;debug|Tegra-Android&apos;" />
-    <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;release|Tegra-Android&apos;" />
 </Project>

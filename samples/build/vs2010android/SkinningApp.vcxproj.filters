@@ -5,20 +5,32 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\SkinningApp\SkinnedMesh.cpp">
+		<ClCompile Include="..\..\es2-aurora\SkinningApp\SkinnedMesh.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\SkinningApp\SkinningApp.cpp">
+		<ClCompile Include="..\..\es2-aurora\SkinningApp\SkinningApp.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\SkinningApp\CharacterModel.h">
+		<ClInclude Include="..\..\es2-aurora\SkinningApp\CharacterModel.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\SkinningApp\SkinnedMesh.h">
+		<ClInclude Include="..\..\es2-aurora\SkinningApp\SkinnedMesh.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\SkinningApp\SkinningApp.h">
+		<ClInclude Include="..\..\es2-aurora\SkinningApp\SkinningApp.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\SkinningApp\assets\shaders\simple.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\SkinningApp\assets\shaders\skinning.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

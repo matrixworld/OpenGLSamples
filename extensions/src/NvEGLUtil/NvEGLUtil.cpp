@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvEGLUtil/NvEGLUtil.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -35,6 +35,7 @@
 #include "NvEGLUtil.h"
 #include <android/log.h>
 #include <unistd.h>
+#include <NV/NvPlatformGL.h>
 
 #define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG,  \
                                              "NvEGLUtil", \
@@ -42,6 +43,79 @@
 #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR,  \
                                              "NvEGLUtil", \
                                              __VA_ARGS__))
+
+//#define NV_ES31_FUNC(ret, func, parms) \
+//ret (KHRONOS_APIENTRY *NvRemap_ ## func) parms = 0;
+
+bool s_functionsInitialized = false;
+
+// Hack until I split out the enums and types
+typedef void (GL_APIENTRY  *GLDEBUGPROCKHR)(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,const void *userParam);
+
+#undef NV_ES31_FUNC
+#undef NV_ES31_FUNC_RET
+
+#define NV_ES31_FUNC(ret, func, formals, actuals) \
+    typedef ret (KHRONOS_APIENTRY* NvPtr_ ## func ## Type) formals; \
+    static NvPtr_ ## func ## Type NvPtr_ ## func = NULL;
+
+#define NV_ES31_FUNC_RET(ret, func, formals, actuals) \
+    typedef ret (KHRONOS_APIENTRY* NvPtr_ ## func ## Type) formals; \
+    static NvPtr_ ## func ## Type NvPtr_ ## func = NULL;
+
+#include "NvGLESWrapper/NvES31Funcs.h"
+#include "NvGLESWrapper/NvES31AEPFuncs.h"
+
+#undef NV_ES31_FUNC
+#undef NV_ES31_FUNC_RET
+
+#define NV_ES31_FUNC(ret, func, formals, actuals) \
+ret KHRONOS_APIENTRY NvRemap_ ## func formals \
+    { NvPtr_ ## func actuals; }
+
+#define NV_ES31_FUNC_RET(ret, func, formals, actuals) \
+ret KHRONOS_APIENTRY NvRemap_ ## func formals \
+    { return NvPtr_ ## func actuals; }
+
+#include "NvGLESWrapper/NvES31Funcs.h"
+#include "NvGLESWrapper/NvES31AEPFuncs.h"
+
+#undef NV_ES31_FUNC
+#undef NV_ES31_FUNC_RET
+
+static void NvInitWrapperFunctions(bool isGL)
+{
+    if (isGL)
+    {
+#define NV_ES31_WRAP_FUNC(ret, func, noextfunc, formals, actuals) \
+    NvPtr_ ## func = (NvPtr_ ## func ## Type) eglGetProcAddress(#noextfunc);
+
+#define NV_ES31_WRAP_FUNC_RET(ret, func, noextfunc, formals, actuals) \
+    NvPtr_ ## func = (NvPtr_ ## func ## Type) eglGetProcAddress(#noextfunc);
+
+#include "NvGLESWrapper/NvES31GLRemap.h"
+#include "NvGLESWrapper/NvES31AEPGLRemap.h"
+
+#undef NV_ES31_WRAP_FUNC
+#undef NV_ES31_WRAP_FUNC_RET
+    }
+    else
+    {
+#define NV_ES31_FUNC(ret, func, formals, actuals) \
+    NvPtr_ ## func = (NvPtr_ ## func ## Type) eglGetProcAddress(#func);
+
+#define NV_ES31_FUNC_RET(ret, func, formals, actuals) \
+    NvPtr_ ## func = (NvPtr_ ## func ## Type) eglGetProcAddress(#func);
+
+#include "NvGLESWrapper/NvES31Funcs.h"
+#include "NvGLESWrapper/NvES31AEPFuncs.h"
+
+#undef NV_ES31_FUNC
+#undef NV_ES31_FUNC_RET
+    }
+    s_functionsInitialized = true;
+}
+
 
 // EGL_KHR_create_context
 #define EGL_CONTEXT_MAJOR_VERSION_KHR           0x3098
@@ -277,10 +351,10 @@ bool NvEGLUtil::createContext() {
                 m_minVer = value;
             EGL_STATUS_LOG("eglCreateContext");
         } else {
-            // Failed - try ES3
+            // Failed - try ES3.1
             m_api = EGL_OPENGL_ES_API;
             m_majVer = 3;
-            m_minVer = 0;
+            m_minVer = 1;
         }
     }
 
@@ -578,6 +652,9 @@ bool NvEGLUtil::bind()
         EGL_ERROR_LOG("eglMakeCurrent");
         return false;
     }
+
+    if (!s_functionsInitialized)
+        NvInitWrapperFunctions(m_api == EGL_OPENGL_API);
 
     m_status = NV_IS_BOUND;
 

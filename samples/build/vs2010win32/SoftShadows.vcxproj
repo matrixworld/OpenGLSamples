@@ -33,7 +33,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
 		<OutDir>./../../bin/vs2010x86\</OutDir>
-		<IntDir>./../../intermediate/SoftShadows/vs2010x86/debug</IntDir>
+		<IntDir>./intermediate/SoftShadows/vs2010x86/debug/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>SoftShadowsD</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -47,19 +47,19 @@
 			<IntrinsicFunctions>true</IntrinsicFunctions>
 			<SuppressStartupBanner>true</SuppressStartupBanner>
 			<FloatingPointModel>Fast</FloatingPointModel>
-			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996 /wd4481</AdditionalOptions>
+			<AdditionalOptions>/wd4481 /Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../SoftShadows;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/SoftShadows;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>WIN32;_WIN32;GL_API_LEVEL_ES3_1_AEP;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3d.lib;opengl32.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)SoftShadowsD.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2010x86;./../../../extensions/lib/vs2010x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/SoftShadowsD.exe.pdb</ProgramDatabaseFile>
@@ -74,7 +74,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
 		<OutDir>./../../bin/vs2010x86\</OutDir>
-		<IntDir>./../../intermediate/SoftShadows/vs2010x86/release</IntDir>
+		<IntDir>./intermediate/SoftShadows/vs2010x86/release/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>SoftShadows</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -89,19 +89,18 @@
 			<FunctionLevelLinking>true</FunctionLevelLinking>
 			<SuppressStartupBanner>true</SuppressStartupBanner>
 			<FloatingPointModel>Fast</FloatingPointModel>
-			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996 /wd4481</AdditionalOptions>
+			<AdditionalOptions>/wd4481 /Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>MaxSpeed</Optimization>
-			<AdditionalIncludeDirectories>./../../SoftShadows;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>WIN32;_WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/SoftShadows;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>WIN32;_WIN32;GL_API_LEVEL_ES3_1_AEP;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
-			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)SoftShadows.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2010x86;./../../../extensions/lib/vs2010x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/SoftShadows.exe.pdb</ProgramDatabaseFile>
@@ -115,61 +114,77 @@
 		</ProjectReference>
 	</ItemDefinitionGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\SoftShadows\KnightModel.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\SoftShadows\KnightModel.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\SoftShadows\PodiumModel.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\SoftShadows\PodiumModel.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\SoftShadows\RigidMesh.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\SoftShadows\RigidMesh.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\SoftShadows\SoftShadows.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\SoftShadows\SoftShadows.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\SoftShadows\SoftShadowsRenderer.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\SoftShadows\SoftShadowsRenderer.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\SoftShadows\DepthPrepassShader.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\DepthPrepassShader.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\EyeShader.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\EyeShader.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\KnightModel.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\KnightModel.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\PcssShader.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\PcssShader.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\PodiumModel.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\PodiumModel.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\RigidMesh.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\RigidMesh.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\SceneShader.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\SceneShader.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\Shader.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\Shader.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\ShadowMapShader.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\ShadowMapShader.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\SimpleSceneShader.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\SimpleSceneShader.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\SoftShadows.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\SoftShadows.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\SoftShadowsCommon.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\SoftShadowsCommon.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\SoftShadowsRenderer.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\SoftShadowsRenderer.h">
 		</ClInclude>
-		<ClInclude Include="..\..\SoftShadows\VisTexShader.h">
+		<ClInclude Include="..\..\es3aep-kepler\SoftShadows\VisTexShader.h">
 		</ClInclude>
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\..\SoftShadows\assets\shaders\depthprepass.vert">
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\depthprepass.frag">
 		</None>
-		<None Include="..\..\SoftShadows\assets\shaders\eyerender.vert">
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\pcss.frag">
 		</None>
-		<None Include="..\..\SoftShadows\assets\shaders\shadowmap.vert">
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\shadowmap.frag">
 		</None>
-		<None Include="..\..\SoftShadows\assets\shaders\vistex.vert">
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\vistex.frag">
 		</None>
-		<None Include="..\..\SoftShadows\assets\shaders\depthprepass.frag">
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\depthprepass.vert">
 		</None>
-		<None Include="..\..\SoftShadows\assets\shaders\pcss.frag">
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\eyerender.vert">
 		</None>
-		<None Include="..\..\SoftShadows\assets\shaders\shadowmap.frag">
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\shadowmap.vert">
 		</None>
-		<None Include="..\..\SoftShadows\assets\shaders\vistex.frag">
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\vistex.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\depthprepass.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\eyerender.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\shadowmap.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\vistex.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\depthprepass.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\pcss.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\shadowmap.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\SoftShadows\assets\shaders\vistex.frag">
 		</None>
 	</ItemGroup>
 	<ItemGroup>

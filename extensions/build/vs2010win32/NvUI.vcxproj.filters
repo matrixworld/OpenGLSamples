@@ -11,6 +11,9 @@
 		<ClCompile Include="..\..\src\NvUI\NvEmbeddedAsset.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\src\NvUI\NvGestureDetector.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\src\NvUI\NvTweakBar.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
@@ -69,6 +72,9 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="..\..\include\NvUI\NvBitFont.h">
+			<Filter>include</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\NvUI\NvGestureDetector.h">
 			<Filter>include</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\include\NvUI\NvGestureEvent.h">

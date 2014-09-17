@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/InputCallbacksGLFW.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -170,8 +170,8 @@ static void glfw_mouse(GLFWwindow* window, int32_t button, int32_t action, int32
         else
             p.m_id = NvMouseButton::RIGHT;
         s_lastButton = p.m_id;
-        NvInputDeviceType::Enum dev = NvInputDeviceType::MOUSE;
-        sCallbacks->pointerInput(dev, action ? NvPointerActionType::DOWN : NvPointerActionType::UP, 0, 1, &p);
+        p.m_device = NvInputDeviceType::MOUSE;
+        sCallbacks->pointerInput(p.m_device, action ? NvPointerActionType::DOWN : NvPointerActionType::UP, 0, 1, &p);
     }
 }
 
@@ -179,12 +179,12 @@ static void glfw_mouse(GLFWwindow* window, int32_t button, int32_t action, int32
 static void glfw_motion(GLFWwindow* window, double x, double y)
 {
     if (sCallbacks) {
-        NvInputDeviceType::Enum dev = NvInputDeviceType::MOUSE;
         NvPointerEvent p;
         p.m_x = (float)x;
         p.m_y = (float)y;
         p.m_id = s_lastButton;
-        sCallbacks->pointerInput(dev, NvPointerActionType::MOTION, 0, 1, &p);
+        p.m_device = NvInputDeviceType::MOUSE;
+        sCallbacks->pointerInput(p.m_device, NvPointerActionType::MOTION, 0, 1, &p);
     }
 }
 

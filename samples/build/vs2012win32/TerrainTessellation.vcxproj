@@ -39,7 +39,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
 		<OutDir>./../../bin/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/TerrainTessellation/vs2012x86/debug</IntDir>
+		<IntDir>./intermediate/TerrainTessellation/vs2012x86/debug/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>TerrainTessellationD</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -55,17 +55,17 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/wd4324 /Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../TerrainTessellation/assets/shaders;./../../TerrainTessellation;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/TerrainTessellation/assets/shaders;./../../es3aep-kepler/TerrainTessellation;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>WIN32;_WIN32;GL_API_LEVEL_ES3_1_AEP;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3d.lib;opengl32.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)TerrainTessellationD.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2012x86;./../../../extensions/lib/vs2012x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/TerrainTessellationD.exe.pdb</ProgramDatabaseFile>
@@ -80,7 +80,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
 		<OutDir>./../../bin/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/TerrainTessellation/vs2012x86/release</IntDir>
+		<IntDir>./intermediate/TerrainTessellation/vs2012x86/release/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>TerrainTessellation</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -97,17 +97,16 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/wd4324 /Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>MaxSpeed</Optimization>
-			<AdditionalIncludeDirectories>./../../TerrainTessellation/assets/shaders;./../../TerrainTessellation;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>WIN32;_WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/TerrainTessellation/assets/shaders;./../../es3aep-kepler/TerrainTessellation;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>WIN32;_WIN32;GL_API_LEVEL_ES3_1_AEP;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
-			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)TerrainTessellation.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2012x86;./../../../extensions/lib/vs2012x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/TerrainTessellation.exe.pdb</ProgramDatabaseFile>
@@ -121,16 +120,46 @@
 		</ProjectReference>
 	</ItemDefinitionGroup>
 	<ItemGroup>
-		<ClInclude Include="..\..\TerrainTessellation\assets\shaders\uniforms.h">
+		<ClInclude Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\uniforms.h">
 		</ClInclude>
-		<ClCompile Include="..\..\TerrainTessellation\TerrainTessellation.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\TerrainTessellation\TerrainTessellation.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\TerrainTessellation\noise.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\TerrainTessellation\noise.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\TerrainTessellation\TerrainTessellation.h">
+		<ClInclude Include="..\..\es3aep-kepler\TerrainTessellation\TerrainTessellation.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TerrainTessellation\noise.h">
+		<ClInclude Include="..\..\es3aep-kepler\TerrainTessellation\noise.h">
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\dnoise.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\fragment_wireframe.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\generateTerrain_fs.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\generateTerrain_vs.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\noise.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\noise3D.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\sky_fs.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\sky_vs.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\terrain.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\terrain_control.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\terrain_fragment.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\terrain_tessellation.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\terrain_vertex.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\TerrainTessellation\assets\shaders\wireframe_geom.glsl">
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="./../../../extensions/externals/build/vs2012win32/Half.vcxproj">

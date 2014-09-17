@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvGamepad/NvGamepadLinux.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -85,8 +85,6 @@ private:
     int mJoyFile;
     int mStickDeadzone;
     int mTriggerDeadzone;
-    uint32_t mCurrentTimestamp;
-    uint32_t* mLastReturnedTimestamps;
     State* mStates;
 };
 

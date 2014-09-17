@@ -5,11 +5,32 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\InstancedTessellation\InstancedTessellation.cpp">
+		<ClCompile Include="..\..\es2-aurora\InstancedTessellation\InstancedTessellation.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\InstancedTessellation\InstancedTessellation.h">
+		<ClInclude Include="..\..\es2-aurora\InstancedTessellation\InstancedTessellation.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\InstancedTessellation\assets\shaders\lighting.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\InstancedTessellation\assets\shaders\deform.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\InstancedTessellation\assets\shaders\deform_instanced.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\InstancedTessellation\assets\shaders\npatch.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\InstancedTessellation\assets\shaders\npatch_instanced.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

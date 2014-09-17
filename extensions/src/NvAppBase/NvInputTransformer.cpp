@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvInputTransformer.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -66,6 +66,21 @@ NvInputTransformer::NvInputTransformer() :
 
 NvInputTransformer::~NvInputTransformer()
 {
+}
+
+bool NvInputTransformer::isAnimating()
+{
+    static nv::vec3f zero = nv::vec3f(0.0f);
+    Transform& xf = m_xforms[NvCameraXformType::MAIN];
+    if (xf.m_rotateVel.x != 0.0f || xf.m_rotateVel.y != 0.0f || xf.m_rotateVel.z != 0.0f || 
+        xf.m_translateVel.x != 0.0f || xf.m_translateVel.y != 0.0f || xf.m_translateVel.z != 0.0f)
+        return true;
+
+    if (m_motionMode == NvCameraMotionType::DUAL_ORBITAL) {
+        return m_xforms[NvCameraXformType::SECONDARY].m_rotateVel != zero;
+    }
+
+    return false;
 }
 
 nv::matrix4f NvInputTransformer::getModelViewMat(NvCameraXformType::Enum xform) {

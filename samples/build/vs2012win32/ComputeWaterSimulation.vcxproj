@@ -39,7 +39,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
 		<OutDir>./../../bin/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/ComputeWaterSimulation/vs2012x86/debug</IntDir>
+		<IntDir>./intermediate/ComputeWaterSimulation/vs2012x86/debug/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>ComputeWaterSimulationD</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -55,17 +55,17 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../ComputeWaterSimulation;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;./../../ComputeWaterSimulation/assets/shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/ComputeWaterSimulation;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;./../../es3aep-kepler/ComputeWaterSimulation/assets/shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3d.lib;opengl32.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)ComputeWaterSimulationD.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2012x86;./../../../extensions/lib/vs2012x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/ComputeWaterSimulationD.exe.pdb</ProgramDatabaseFile>
@@ -80,7 +80,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
 		<OutDir>./../../bin/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/ComputeWaterSimulation/vs2012x86/release</IntDir>
+		<IntDir>./intermediate/ComputeWaterSimulation/vs2012x86/release/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>ComputeWaterSimulation</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -97,17 +97,16 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>MaxSpeed</Optimization>
-			<AdditionalIncludeDirectories>./../../ComputeWaterSimulation;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;./../../ComputeWaterSimulation/assets/shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/ComputeWaterSimulation;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;./../../es3aep-kepler/ComputeWaterSimulation/assets/shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
-			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)ComputeWaterSimulation.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2012x86;./../../../extensions/lib/vs2012x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/ComputeWaterSimulation.exe.pdb</ProgramDatabaseFile>
@@ -121,32 +120,50 @@
 		</ProjectReference>
 	</ItemDefinitionGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\ComputeWaterSimulation\ComputeWaterSimulation.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\ComputeWaterSimulation.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\Wave.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\Wave.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\WaveSim.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSim.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\WaveSimRenderer.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSimRenderer.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\WaveSimThread.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSimThread.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\noise.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\noise.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\ComputeWaterSimulation\Array2D.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\Array2D.h">
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\ComputeWaterSimulation.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\ComputeWaterSimulation.h">
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\Wave.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\Wave.h">
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\WaveSim.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSim.h">
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\WaveSimRenderer.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSimRenderer.h">
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\WaveSimThread.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSimThread.h">
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\noise.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\noise.h">
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\WaterGradientsPass.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\WaterTransformPass.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\renderFS.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\renderVS.glsl">
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\water.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\waterFresnel.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\waterNormals.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\water.vert">
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="./../../../extensions/externals/build/vs2012win32/Half.vcxproj">

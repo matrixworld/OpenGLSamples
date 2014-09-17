@@ -39,7 +39,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
 		<OutDir>./../../bin/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/FeedbackParticlesApp/vs2012x86/debug</IntDir>
+		<IntDir>./intermediate/FeedbackParticlesApp/vs2012x86/debug/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>FeedbackParticlesAppD</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -55,17 +55,17 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../FeedbackParticlesApp;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/FeedbackParticlesApp;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3d.lib;opengl32.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)FeedbackParticlesAppD.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2012x86;./../../../extensions/lib/vs2012x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/FeedbackParticlesAppD.exe.pdb</ProgramDatabaseFile>
@@ -80,7 +80,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
 		<OutDir>./../../bin/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/FeedbackParticlesApp/vs2012x86/release</IntDir>
+		<IntDir>./intermediate/FeedbackParticlesApp/vs2012x86/release/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>FeedbackParticlesApp</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -97,17 +97,16 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>MaxSpeed</Optimization>
-			<AdditionalIncludeDirectories>./../../FeedbackParticlesApp;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/FeedbackParticlesApp;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
-			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)FeedbackParticlesApp.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2012x86;./../../../extensions/lib/vs2012x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/FeedbackParticlesApp.exe.pdb</ProgramDatabaseFile>
@@ -121,25 +120,25 @@
 		</ProjectReference>
 	</ItemDefinitionGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\FeedbackParticlesApp\FeedbackParticlesApp.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\FeedbackParticlesApp.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\FeedbackParticlesApp\FeedbackParticlesScene.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\FeedbackParticlesScene.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\FeedbackParticlesApp\ParticleSystem.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\ParticleSystem.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\FeedbackParticlesApp\TextureUtils.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\TextureUtils.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\FeedbackParticlesApp\Utils.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\Utils.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\FeedbackParticlesApp\FeedbackParticlesApp.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\FeedbackParticlesApp.h">
 		</ClInclude>
-		<ClInclude Include="..\..\FeedbackParticlesApp\FeedbackParticlesScene.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\FeedbackParticlesScene.h">
 		</ClInclude>
-		<ClInclude Include="..\..\FeedbackParticlesApp\ParticleSystem.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\ParticleSystem.h">
 		</ClInclude>
-		<ClInclude Include="..\..\FeedbackParticlesApp\TextureUtils.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\TextureUtils.h">
 		</ClInclude>
-		<ClInclude Include="..\..\FeedbackParticlesApp\Utils.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\Utils.h">
 		</ClInclude>
 	</ItemGroup>
 	<ItemGroup>

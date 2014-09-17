@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvAndroidNativeAppGlue.c
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //----------------------------------------------------------------------------------
@@ -42,6 +42,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/resource.h>
 
 #include "NvAndroidNativeAppGlue.h"
@@ -70,6 +71,9 @@ enum
     NV_APP_STATUS_INTERACTABLE     = 0x0000000f
 };
 
+// Not my favorite, but NativeAcitivty makes its native handle private.
+// So we have to cache it.
+static struct android_app* sAndroidApp = NULL;
 
 static void free_saved_state(struct android_app* android_app) {
     pthread_mutex_lock(&android_app->mutex);
@@ -324,10 +328,13 @@ static void* android_app_entry(void* param) {
     android_app->inputPollSource.id = LOOPER_ID_INPUT;
     android_app->inputPollSource.app = android_app;
     android_app->inputPollSource.process = process_input;
+    android_app->usesChoreographer = 0;
 
     ALooper* looper = ALooper_prepare(ALOOPER_PREPARE_ALLOW_NON_CALLBACKS);
     ALooper_addFd(looper, android_app->msgread, LOOPER_ID_MAIN, ALOOPER_EVENT_INPUT, NULL,
             &android_app->cmdPollSource);
+    ALooper_addFd(looper, android_app->renderRead, NV_LOOPER_ID_REDRAW, ALOOPER_EVENT_INPUT, NULL,
+            NULL);
     android_app->looper = looper;
 
     int error = (*android_app->activity->vm)->AttachCurrentThread(android_app->activity->vm, 
@@ -345,6 +352,8 @@ static void* android_app_entry(void* param) {
     (*android_app->activity->vm)->DetachCurrentThread(android_app->activity->vm);
 
     android_app_destroy(android_app);
+    
+    sAndroidApp = NULL;
 
     return NULL;
 }
@@ -358,6 +367,7 @@ static struct android_app* android_app_create(ANativeActivity* activity,
     struct android_app* android_app = (struct android_app*)malloc(sizeof(struct android_app));
     memset(android_app, 0, sizeof(struct android_app));
     android_app->activity = activity;
+    LOGI("android_app_create");
 
     pthread_mutex_init(&android_app->mutex, NULL);
     pthread_cond_init(&android_app->cond, NULL);
@@ -374,6 +384,13 @@ static struct android_app* android_app_create(ANativeActivity* activity,
     }
     android_app->msgread = msgpipe[0];
     android_app->msgwrite = msgpipe[1];
+
+    if (pipe(msgpipe)) {
+        LOGI("could not create pipe: %s", strerror(errno));
+    }
+    android_app->renderRead = msgpipe[0];
+    android_app->renderWrite = msgpipe[1];
+    fcntl(android_app->renderRead, F_SETFL, O_NONBLOCK);
 
     android_app->appThreadThis = (*activity->env)->NewGlobalRef(activity->env, activity->clazz);
 
@@ -483,6 +500,8 @@ static void android_app_free(struct android_app* android_app) {
 
     close(android_app->msgread);
     close(android_app->msgwrite);
+    close(android_app->renderRead);
+    close(android_app->renderWrite);
     pthread_cond_destroy(&android_app->cond);
     pthread_mutex_destroy(&android_app->mutex);
     free(android_app);
@@ -583,6 +602,7 @@ static void onInputQueueDestroyed(ANativeActivity* activity, AInputQueue* queue)
 void ANativeActivity_onCreate(ANativeActivity* activity,
         void* savedState, size_t savedStateSize) {
     LOGI("Creating: %p\n", activity);
+
     activity->callbacks->onDestroy = onDestroy;
     activity->callbacks->onStart = onStart;
     activity->callbacks->onResume = onResume;
@@ -599,6 +619,7 @@ void ANativeActivity_onCreate(ANativeActivity* activity,
     activity->callbacks->onInputQueueDestroyed = onInputQueueDestroyed;
 
     struct android_app* inst = android_app_create(activity, savedState, savedStateSize);
+    sAndroidApp = inst;
 
     activity->instance = inst;
 }
@@ -666,6 +687,70 @@ void nv_app_force_quit_no_cleanup(struct android_app* android_app)
         if (source != NULL)
             source->process(android_app, source);
     }
+
+    sAndroidApp = NULL;
+}
+
+int nv_app_is_redraw(int ident)
+{
+    return ident == NV_LOOPER_ID_REDRAW;
+}
+
+int64_t nv_app_process_redraw(struct android_app* android_app)
+{
+    int64_t time = 0;
+
+    // Loop and eat ALL pending redraws, so they do not queue up
+    while (read(android_app->renderRead, &time, sizeof(time)) > 0) 
+    {
+        // trigger Choreographer mode
+        android_app->usesChoreographer = 1;
+    }
+
+    return time;
+}
+
+int8_t nv_android_app_read_redraw(struct android_app* android_app) {
+    int64_t time;
+    if (read(android_app->renderRead, &time, sizeof(int64_t)) == sizeof(int64_t)) {
+        return time;
+    } else {
+        LOGI("No data on command pipe!");
+    }
+    return 0;
+}
+
+static void android_app_write_redraw(struct android_app* android_app, int64_t time) {
+    if (write(android_app->renderWrite, &time, sizeof(time)) != sizeof(time)) {
+        LOGI("Failure writing android_app redraw: %s\n", strerror(errno));
+    }
+}
+
+void nv_app_post_redraw(struct android_app* android_app, int64_t time)
+{
+    android_app_write_redraw(android_app, time);
+}
+
+int32_t nv_android_app_loop_wait(struct android_app* android_app)
+{
+    return android_app->usesChoreographer ? -1 :
+        (nv_app_status_focused(android_app) ? 1 : 250);
+}
+
+int32_t nv_android_app_free_redraw(struct android_app* android_app)
+{
+    return android_app->usesChoreographer == 0;
+}
+
+static void nv_app_write_cmd(struct android_app* android_app, int8_t cmd) {
+    pthread_mutex_lock(&android_app->mutex);
+    android_app_write_cmd(android_app, cmd);
+    pthread_mutex_unlock(&android_app->mutex);
+}
+
+JNIEXPORT void JNICALL Java_com_nvidia_NvAppBase_NvAppBase_postRedraw(JNIEnv * env, jobject obj, jlong time) {
+    if (sAndroidApp)
+        android_app_write_redraw(sAndroidApp, time);
 }
 
 #endif // ANDROID

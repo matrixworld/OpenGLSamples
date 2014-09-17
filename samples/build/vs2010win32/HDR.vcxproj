@@ -33,7 +33,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
 		<OutDir>./../../bin/vs2010x86\</OutDir>
-		<IntDir>./../../intermediate/HDR/vs2010x86/debug</IntDir>
+		<IntDir>./intermediate/HDR/vs2010x86/debug/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>HDRD</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -49,17 +49,17 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../HDR;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es3-kepler/HDR;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3d.lib;opengl32.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)HDRD.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2010x86;./../../../extensions/lib/vs2010x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/HDRD.exe.pdb</ProgramDatabaseFile>
@@ -74,7 +74,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
 		<OutDir>./../../bin/vs2010x86\</OutDir>
-		<IntDir>./../../intermediate/HDR/vs2010x86/release</IntDir>
+		<IntDir>./intermediate/HDR/vs2010x86/release/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>HDR</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -91,17 +91,16 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>MaxSpeed</Optimization>
-			<AdditionalIncludeDirectories>./../../HDR;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es3-kepler/HDR;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
-			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)HDR.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2010x86;./../../../extensions/lib/vs2010x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/HDR.exe.pdb</ProgramDatabaseFile>
@@ -115,45 +114,45 @@
 		</ProjectReference>
 	</ItemDefinitionGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\HDR\BlurShaderGenerator.cpp">
+		<ClCompile Include="..\..\es3-kepler\HDR\BlurShaderGenerator.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\HDR\FileLoader.cpp">
+		<ClCompile Include="..\..\es3-kepler\HDR\FileLoader.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\HDR\HDR.cpp">
+		<ClCompile Include="..\..\es3-kepler\HDR\HDR.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\HDR\HDRImages.cpp">
+		<ClCompile Include="..\..\es3-kepler\HDR\HDRImages.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\HDR\RenderTexture.cpp">
+		<ClCompile Include="..\..\es3-kepler\HDR\RenderTexture.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\HDR\ShaderObject.cpp">
+		<ClCompile Include="..\..\es3-kepler\HDR\ShaderObject.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\HDR\VertexBufferObject.cpp">
+		<ClCompile Include="..\..\es3-kepler\HDR\VertexBufferObject.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\HDR\rgbe.cpp">
+		<ClCompile Include="..\..\es3-kepler\HDR\rgbe.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\HDR\AppExtensions.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\AppExtensions.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\BlurShaderGenerator.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\BlurShaderGenerator.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\ColorModulation.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\ColorModulation.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\CubeData.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\CubeData.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\FileLoader.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\FileLoader.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\HDR.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\HDR.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\HDRImages.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\HDRImages.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\RenderTexture.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\RenderTexture.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\ShaderDeclaration.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\ShaderDeclaration.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\ShaderObject.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\ShaderObject.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\VertexBufferObject.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\VertexBufferObject.h">
 		</ClInclude>
-		<ClInclude Include="..\..\HDR\rgbe.h">
+		<ClInclude Include="..\..\es3-kepler\HDR\rgbe.h">
 		</ClInclude>
 	</ItemGroup>
 	<ItemGroup>

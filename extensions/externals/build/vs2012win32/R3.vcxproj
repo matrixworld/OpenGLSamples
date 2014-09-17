@@ -39,7 +39,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
 		<OutDir>./../../lib/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/R3/vs2012x86/release</IntDir>
+		<IntDir>./intermediate/R3/vs2012x86/release/</IntDir>
 		<TargetExt>.lib</TargetExt>
 		<TargetName>R3D</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -52,12 +52,12 @@
 			<IntrinsicFunctions>true</IntrinsicFunctions>
 			<SuppressStartupBanner>true</SuppressStartupBanner>
 			<FloatingPointModel>Fast</FloatingPointModel>
-			<AdditionalOptions>/W4 /Oy- /EHsc /wd4748 /wd4995 /wd4390 /wd4100 /wd4201</AdditionalOptions>
+			<AdditionalOptions>/Oy- /EHsc /wd4748 /wd4995 /wd4390 /wd4100 /wd4201</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
 			<AdditionalIncludeDirectories>./../../src/R3;./../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;_LIB;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -78,7 +78,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
 		<OutDir>./../../lib/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/R3/vs2012x86/release</IntDir>
+		<IntDir>./intermediate/R3/vs2012x86/release/</IntDir>
 		<TargetExt>.lib</TargetExt>
 		<TargetName>R3</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -91,15 +91,14 @@
 			<FunctionLevelLinking>true</FunctionLevelLinking>
 			<SuppressStartupBanner>true</SuppressStartupBanner>
 			<FloatingPointModel>Fast</FloatingPointModel>
-			<AdditionalOptions>/W4 /Oy- /EHsc /wd4748 /wd4995 /wd4390 /wd4100 /wd4201</AdditionalOptions>
+			<AdditionalOptions>/Oy- /EHsc /wd4748 /wd4995 /wd4390 /wd4100 /wd4201</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
 			<AdditionalIncludeDirectories>./../../src/R3;./../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
-			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Lib>
 			<AdditionalOptions>/MACHINE:x86 /SUBSYSTEM:WINDOWS /NOLOGO</AdditionalOptions>

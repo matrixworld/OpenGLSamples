@@ -5,11 +5,68 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\MotionBlurAdvanced\MotionBlurAdvanced.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\MotionBlurAdvanced\MotionBlurAdvanced.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\MotionBlurAdvanced\MotionBlurAdvanced.h">
+		<ClInclude Include="..\..\es3aep-kepler\MotionBlurAdvanced\MotionBlurAdvanced.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\depthdraw.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\gather.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\motionblures2.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\neighbormax.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\scenecolor.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\scenevelocity.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\skyboxcolor.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\skyboxvelocity.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\texcoordfullscreen.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\tilemax.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\baseshader.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\motionblures2.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\scenecolor.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\scenevelocity.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\skyboxcolor.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\skyboxvelocity.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\texcoordfullscreen.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

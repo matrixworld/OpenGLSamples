@@ -34,14 +34,20 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
+
+#ifdef _MSC_VER
+#ifndef _INTPTR
+#define _INTPTR 0
+#endif
+#endif
 #include <stdint.h>
 
-#ifdef NV_VC
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning( disable : 4985 ) // 'symbol name': attributes not present on previous declaration
 #endif
 #include <math.h>
-#ifdef NV_VC
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
@@ -491,11 +497,27 @@ typedef struct
 	float x,y,z,w;
 } NV_float4;
 
-/**  Basic struct data type for 16 floats, typically a 3x3 matrix */
+
+/**  Basic struct data type for 7 floats, typically used to represent a 'pose' comprised of a quaternion rotation (x,y,z,w) followed by a position (x,y,z) */
+typedef struct 
+{
+	NV_float4 q;
+	NV_float3 p;
+} NV_float7;
+
+
+/**  Basic struct data type for 9 floats, typically a 3x3 matrix */
 typedef struct 
 {
 	float transform[9];
 } NV_float9;
+
+
+/**  Basic struct data type for 12 floats, typically a 3x4 matrix */
+typedef struct 
+{
+	float transform[12];
+} NV_float12;
 
 
 /**  Basic struct data type for 16 floats, typically a 4x4 matrix */

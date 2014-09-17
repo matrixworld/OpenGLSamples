@@ -5,44 +5,74 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\ComputeWaterSimulation\ComputeWaterSimulation.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\ComputeWaterSimulation.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\Wave.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\Wave.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\WaveSim.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSim.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\WaveSimRenderer.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSimRenderer.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\WaveSimThread.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSimThread.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeWaterSimulation\noise.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeWaterSimulation\noise.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\ComputeWaterSimulation\Array2D.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\Array2D.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\ComputeWaterSimulation.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\ComputeWaterSimulation.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\Wave.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\Wave.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\WaveSim.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSim.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\WaveSimRenderer.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSimRenderer.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\WaveSimThread.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\WaveSimThread.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeWaterSimulation\noise.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeWaterSimulation\noise.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\WaterGradientsPass.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\WaterTransformPass.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\renderFS.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\renderVS.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\water.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\waterFresnel.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\waterNormals.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeWaterSimulation\assets\shaders\water.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

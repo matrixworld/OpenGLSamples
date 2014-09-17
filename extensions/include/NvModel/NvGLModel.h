@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvModel/NvGLModel.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -76,8 +76,10 @@ public:
     /// \param[in] computeTangents if set to true, then tangent vectors will be computed
     /// to be in the S texture coordinate direction.  This may require vertices to be
     /// duplicated in order to allow multiple tangents at a point.  This can cause model
-    /// size explosion, and should be done only if required.
-    void initBuffers(bool computeTangents = false);
+    /// size explosion, and should be done only if required.  If true, normals will also be
+	/// computed, regardless of computeNormals value.
+	/// \param[in] computeNormals if set to true, then normal vectors will be computed.
+    void initBuffers(bool computeTangents = false, bool computeNormals = true);
 
     /// Draw the model using the current shader (positions)
     /// Binds the vertex position array to the given attribute array index and draws the
@@ -129,13 +131,13 @@ public:
         return m_maxExtent;
     }
 
+    void bindBuffers();
+    void unbindBuffers();
+
 private:
     NvModel *model;
     GLuint model_vboID, model_iboID;
     nv::vec3f m_minExtent, m_maxExtent, m_radius;
-
-    inline void bindBuffers();
-    inline void unbindBuffers();
 };
 
 

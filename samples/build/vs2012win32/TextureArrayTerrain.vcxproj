@@ -39,7 +39,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
 		<OutDir>./../../bin/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/TextureArrayTerrain/vs2012x86/debug</IntDir>
+		<IntDir>./intermediate/TextureArrayTerrain/vs2012x86/debug/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>TextureArrayTerrainD</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -55,17 +55,17 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../TextureArrayTerrain;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es2-aurora/TextureArrayTerrain;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3d.lib;opengl32.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)TextureArrayTerrainD.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2012x86;./../../../extensions/lib/vs2012x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/TextureArrayTerrainD.exe.pdb</ProgramDatabaseFile>
@@ -80,7 +80,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
 		<OutDir>./../../bin/vs2012x86\</OutDir>
-		<IntDir>./../../intermediate/TextureArrayTerrain/vs2012x86/release</IntDir>
+		<IntDir>./intermediate/TextureArrayTerrain/vs2012x86/release/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>TextureArrayTerrain</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -97,17 +97,16 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>MaxSpeed</Optimization>
-			<AdditionalIncludeDirectories>./../../TextureArrayTerrain;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es2-aurora/TextureArrayTerrain;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
-			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)TextureArrayTerrain.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2012x86;./../../../extensions/lib/vs2012x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/TextureArrayTerrain.exe.pdb</ProgramDatabaseFile>
@@ -121,32 +120,48 @@
 		</ProjectReference>
 	</ItemDefinitionGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainGenerator.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainGenerator.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainSim.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSim.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainSimRenderer.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimRenderer.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TerrainSimThread.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimThread.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\TextureArrayTerrain\TextureArrayTerrain.cpp">
+		<ClCompile Include="..\..\es2-aurora\TextureArrayTerrain\TextureArrayTerrain.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\TextureArrayTerrain\Array2D.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\Array2D.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\IBOBuild.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\IBOBuild.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\RidgedMultiFractal.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\RidgedMultiFractal.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainGenerator.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainGenerator.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainSim.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSim.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainSimRenderer.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimRenderer.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TerrainSimThread.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TerrainSimThread.h">
 		</ClInclude>
-		<ClInclude Include="..\..\TextureArrayTerrain\TextureArrayTerrain.h">
+		<ClInclude Include="..\..\es2-aurora\TextureArrayTerrain\TextureArrayTerrain.h">
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\skybox.frag">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain.frag">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain_es2.frag">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain_es3.frag">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\skybox.vert">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain.vert">
+		</None>
+		<None Include="..\..\es2-aurora\TextureArrayTerrain\assets\shaders\terrain_es3.vert">
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="./../../../extensions/externals/build/vs2012win32/Half.vcxproj">

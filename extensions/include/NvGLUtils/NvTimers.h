@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvGLUtils/NvTimers.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -62,7 +62,7 @@ public:
     : m_elapsedCycles(0.f)
     , m_nextTimeStampQuery(0)
     , m_startStopCycles(0) {
-        for (int i = 0; i < TIMER_COUNT; i++)
+        for (unsigned int i = 0; i < TIMER_COUNT; i++)
             m_timeStampQueryInFlight[i] = false;
     }
 
@@ -126,7 +126,7 @@ protected:
         // not in flight and record it as a possible next timer to use (since it is
         // now unused)
         int32_t freeQuery = -1;
-        for (int i = 0; i < TIMER_COUNT; i++) {
+        for (unsigned int i = 0; i < TIMER_COUNT; i++) {
             // Are we awaiting a result?
             if (m_timeStampQueryInFlight[i]) {
                 GLuint available = false;
@@ -175,7 +175,7 @@ protected:
     static NV_PFNGLGETQUERYOBJECTUIVPROC   m_glGetQueryObjectuiv;
     static NV_PFNGLGETQUERYOBJECTUI64VPROC m_glGetQueryObjectui64v;
 
-    const static unsigned int TIMER_COUNT = 2;
+    const static unsigned int TIMER_COUNT = 4;
     enum {
         TIMESTAMP_QUERY_BEGIN = 0,
         TIMESTAMP_QUERY_END,
@@ -184,7 +184,7 @@ protected:
 
     GLuint m_queries[TIMER_COUNT][TIMESTAMP_QUERY_COUNT];
     float m_elapsedCycles;
-    int32_t m_nextTimeStampQuery;
+    uint32_t m_nextTimeStampQuery;
     int32_t m_startStopCycles;
     bool m_timeStampQueryInFlight[TIMER_COUNT];
 };

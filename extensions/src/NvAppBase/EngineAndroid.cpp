@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/EngineAndroid.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -45,13 +45,43 @@
 
 bool NvEGLAppContext::isExtensionSupported(const char* ext)
 {
-    return strstr((const char*)glGetString(GL_EXTENSIONS), ext) != NULL;
+    // Extension names should not have spaces.
+    const GLubyte *where = (GLubyte *) strchr(ext, ' ');
+    if (where || *ext == '\0') {
+        return false;
+    }
+
+    const GLubyte *extensions = glGetString(GL_EXTENSIONS);
+    if (!extensions) {
+        // Is an OpenGL context not bound??
+        return false;
+    }
+    // It takes a bit of care to be fool-proof about parsing the
+    // OpenGL extensions string.  Don't be fooled by sub-strings,
+    // etc.
+    const GLubyte *start = extensions;
+    for (;;) {
+        where = (const GLubyte *) strstr((const char *) start, ext);
+        if (!where) {
+            break;
+        }
+        const GLubyte *terminator = where + strlen(ext);
+        if (where == start || *(where - 1) == ' ') {
+            if (*terminator == ' ' || *terminator == '\0') {
+                return true;
+            }
+        }
+        start = terminator;
+    }
+    return false;
 }
 
 Engine::Engine(struct android_app* app) {
     mApp = app;
+    mAppBase = NULL;
 
     mForceRender = 0;
+    mRedraw = false;
     mResizePending = false;
     
     mEGL = NULL;
@@ -69,6 +99,7 @@ Engine::Engine(struct android_app* app) {
         mState = *(struct saved_state*)mApp->savedState;
     }
 
+    mRedrawMode = NvRedrawMode::UNBOUNDED;
 }
 
 Engine::~Engine()
@@ -96,17 +127,31 @@ bool Engine::pollEvents(NvInputCallbacks* callbacks)
     mCallbacks = callbacks;
     mPadChangedMask = 0;
 
-    // If not animating, we will block forever waiting for events.
-    // If animating, we loop until all events are read, then continue
-    // to draw the next frame of animation.
-    while ((ident=ALooper_pollAll((nv_app_status_focused(mApp)) ? 1 : 250, NULL, &events,
+    // We will block different lengths waiting for events,
+    // depending on mode and availability of the Choreographer.
+    while ((ident=ALooper_pollAll(nv_android_app_loop_wait(mApp), NULL, &events,
             (void**)&source)) >= 0) {
 
         // Process this event.
         if (source != NULL) {
             source->process(mApp, source);
+        } else if (nv_app_is_redraw(ident)) {
+            LOGI("Redraw event");
+            int64_t time = nv_app_process_redraw(mApp);
+            
+            if (time)
+                mRedraw = true;
         }
+
+        if (!nv_app_status_running(mApp))
+            break;
+
+        if (mRedraw || mForceRender>0)
+            break;
     }
+
+    if (nv_android_app_free_redraw(mApp) && (mRedrawMode != NvRedrawMode::ON_DEMAND))
+        mRedraw = true;
 
     if (mCallbacks && mPadChangedMask)
         mCallbacks->gamepadChanged(mPadChangedMask);
@@ -121,26 +166,68 @@ bool Engine::shouldRender()
         if (!mEGL->isReadyToRender(true))
             return false;
 
-        return true;
+        bool redraw = mRedraw;
+        if (mForceRender > 0)
+        {
+            mForceRender--;
+            redraw = true;
+        }
+        mRedraw = false;
+        return redraw;
     }
     else
     {
+        mRedraw = false;
         // Even if we are not interactible, we may be visible, so we
         // HAVE to do any forced renderings if we can.  We must also
         // check for resize, since that may have been the point of the
         // forced render request in the first place!
         if ((mForceRender > 0) && mEGL->isReadyToRender(false)) 
         {
+            mForceRender--;
             return true;
         }
     }
 
-    if (mForceRender > 0) {
-        mForceRender--;
-        return true;
-    }
-
     return false;
+}
+
+NvRedrawMode::Enum Engine::getRedrawMode()
+{ 
+    return mRedrawMode; 
+}
+
+void Engine::setRedrawMode(NvRedrawMode::Enum mode)
+{
+    switch (mode)
+    {
+        case NvRedrawMode::UNBOUNDED:
+            useChoreographer(false);
+            mRedrawMode = NvRedrawMode::UNBOUNDED;
+            break;
+
+        case NvRedrawMode::VSYNC:
+            if (useChoreographer(true))
+            {
+                mRedrawMode = NvRedrawMode::VSYNC;
+            }
+            else
+            {
+                mRedrawMode = NvRedrawMode::UNBOUNDED;
+            }
+            break;
+
+        case NvRedrawMode::ON_DEMAND:
+            useChoreographer(false);
+            mRedrawMode = NvRedrawMode::ON_DEMAND;
+            break;
+    };
+}
+
+void Engine::requestRedraw()
+{ 
+    if (mRedrawMode == NvRedrawMode::ON_DEMAND)
+        mRedraw = true;
 }
 
 bool Engine::isContextLost()
@@ -162,6 +249,31 @@ bool Engine::hasWindowResized()
     }
 
     return false;
+}
+
+// If we cause an exception in JNI, we print the exception info to
+// the log, we clear the exception to avoid a pending-exception
+// crash, and we force the function to return.
+#define EXCEPTION_RETURN(env) \
+    if (env->ExceptionOccurred()) { \
+        env->ExceptionDescribe(); \
+        env->ExceptionClear(); \
+        return false; \
+    }
+
+bool Engine::useChoreographer(bool use)
+{
+    jclass thisClass = mApp->appThreadEnv->GetObjectClass(mApp->appThreadThis);
+    EXCEPTION_RETURN(mApp->appThreadEnv);
+
+    jmethodID useChoreographer = mApp->appThreadEnv->GetMethodID(thisClass, 
+        "useChoreographer", "(Z)Z");
+    EXCEPTION_RETURN(mApp->appThreadEnv);
+
+    bool success = mApp->appThreadEnv->CallBooleanMethod(mApp->appThreadThis, useChoreographer, use);
+    EXCEPTION_RETURN(mApp->appThreadEnv);
+
+    return true;
 }
 
 
@@ -223,15 +335,14 @@ int32_t Engine::handleInput(AInputEvent* event) {
         return false;
 
     if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
+        bool handled = false;
         int32_t pointerCount = AMotionEvent_getPointerCount(event);
-
         int32_t action = amotion_getActionMasked(event);
         int32_t pointerIndex = amotion_getActionIndex(event);
 
-        bool handled = false;
-
         float x=0, y=0;
         NvPointerEvent p[20]; // !!!!!TBD  should use linkedlist or app-member struct or something?  TODO
+        NvInputDeviceType::Enum dev = NvInputDeviceType::TOUCH;
         // loop over pointercount and copy data
         // !!!!TBD TODO, might need to ensure that p[0] is always the data from the first-finger-touched ID...
         for (int i=0; i<pointerCount; i++) {
@@ -239,13 +350,23 @@ int32_t Engine::handleInput(AInputEvent* event) {
             y = AMotionEvent_getY(event, i);
             p[i].m_x = x;
             p[i].m_y = y;
-            p[i].m_id = AMotionEvent_getPointerId(event, i);;
+            p[i].m_id = AMotionEvent_getPointerId(event, i);
+            // then figure out tool/device enum...
+            int32_t tool = AMotionEvent_getToolType(event, i);
+            if (tool==AMOTION_EVENT_TOOL_TYPE_STYLUS ||
+                tool==AMOTION_EVENT_TOOL_TYPE_ERASER)//!!!!TBD TODO
+                dev = NvInputDeviceType::STYLUS;
+            else if (tool==AMOTION_EVENT_TOOL_TYPE_MOUSE)
+                dev = NvInputDeviceType::MOUSE;
+            else
+                dev = NvInputDeviceType::TOUCH;
+            // else we assume == FINGER... if unknown, treat as FINGER. TODO.
+            p[i].m_device = dev;
         }
 
         mState.x = x;
         mState.y = y;
     
-        NvInputDeviceType::Enum dev = NvInputDeviceType::TOUCH;
         NvPointerActionType::Enum pact;
 
         switch(action)
@@ -271,7 +392,8 @@ int32_t Engine::handleInput(AInputEvent* event) {
             break;
         }
 
-        handled = mCallbacks->pointerInput(dev, pact, 0, pointerCount, p);
+        const int64_t timestamp = AMotionEvent_getEventTime((const AInputEvent*)event);
+        handled = mCallbacks->pointerInput(dev, pact, 0, pointerCount, p, timestamp);
         // return code handling...
         if (pact==NvPointerActionType::UP)
             return 1;
@@ -310,13 +432,9 @@ void Engine::handleCommand(int32_t cmd) {
             break;
 
         // The window is being shown, get it ready.
-        // Note that on ICS, the EGL size will often be correct for the new size here
-        // But on HC it will not be.  We need to defer checking the new res until the
-        // first render with the new surface!
         case APP_CMD_INIT_WINDOW:
         case APP_CMD_WINDOW_RESIZED:
             mEGL->setWindow(mApp->window);
-            requestForceRender();
             break;
 
         case APP_CMD_TERM_WINDOW:
@@ -325,10 +443,17 @@ void Engine::handleCommand(int32_t cmd) {
             break;
 
         case APP_CMD_GAINED_FOCUS:
+            if (mAppBase) 
+                mAppBase->focusChanged(true);
             requestForceRender();
             break;
 
         case APP_CMD_LOST_FOCUS:
+            if (mAppBase) 
+                mAppBase->focusChanged(false);
+            requestForceRender();
+            break;
+
         case APP_CMD_PAUSE:
             requestForceRender();
             break;

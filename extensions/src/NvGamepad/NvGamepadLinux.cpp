@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvGamepad/NvGamepadLinux.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -47,13 +47,10 @@ NvGamepadLinux::NvGamepadLinux()
 : mJoyFile(-1)
 , mStickDeadzone(8000)
 , mTriggerDeadzone(400)
-, mCurrentTimestamp(0)
 {
     mStates = new State[MAX_GAMEPADS];
-    mLastReturnedTimestamps = new uint32_t[MAX_GAMEPADS];
-
+    
     memset(mStates, 0, MAX_GAMEPADS * sizeof(State));
-    memset(mLastReturnedTimestamps, 0, MAX_GAMEPADS * sizeof(uint32_t));
 
     // opening the joystick...  find ONE for now !!!!TBD can find and store N in the future.
     for (int i=0; i<4; i++) {
@@ -86,8 +83,7 @@ NvGamepadLinux::~NvGamepadLinux() {
 
 bool NvGamepadLinux::getState(int32_t padID, State& state) {
     state = mStates[padID];
-    mLastReturnedTimestamps[padID] = state.mTimestamp;
-
+    
     // For now, we assume that any pad that has sent us an event is connected.
     // This is obviously a hack, since it does not include:
     // 1) Connected pads that have yet to be touched

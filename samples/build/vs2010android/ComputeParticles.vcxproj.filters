@@ -5,29 +5,44 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClInclude Include="..\..\ComputeParticles\assets\shaders\uniforms.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeParticles\assets\shaders\uniforms.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClCompile Include="..\..\ComputeParticles\ComputeParticles.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeParticles\ComputeParticles.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeParticles\ParticleSystem.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeParticles\ParticleSystem.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ComputeParticles\noise.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeParticles\noise.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\ComputeParticles\ComputeParticles.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeParticles\ComputeParticles.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeParticles\ParticleSystem.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeParticles\ParticleSystem.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeParticles\ShaderBuffer.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeParticles\ShaderBuffer.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ComputeParticles\noise.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeParticles\noise.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es3aep-kepler\ComputeParticles\assets\shaders\particlesCS.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeParticles\assets\shaders\renderFS.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeParticles\assets\shaders\renderVS.glsl">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

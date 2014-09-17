@@ -5,11 +5,35 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\MotionBlur\MotionBlur.cpp">
+		<ClCompile Include="..\..\es2-aurora\MotionBlur\MotionBlur.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\MotionBlur\MotionBlur.h">
+		<ClInclude Include="..\..\es2-aurora\MotionBlur\MotionBlur.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\motionblur.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\scenecolor.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\skyboxcolor.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\motionblur.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\scenecolor.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\skyboxcolor.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

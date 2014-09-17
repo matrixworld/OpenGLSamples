@@ -4,12 +4,14 @@ ProjectName = NvEGLUtil
 NvEGLUtil_cppfiles   += ./../../../extensions/src/NvEGLUtil/NvEGLUtil.cpp
 
 NvEGLUtil_cpp_debug_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.debug.P, $(NvEGLUtil_cppfiles)))))
+NvEGLUtil_cc_debug_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.debug.P, $(NvEGLUtil_ccfiles)))))
 NvEGLUtil_c_debug_dep      = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.debug.P, $(NvEGLUtil_cfiles)))))
-NvEGLUtil_debug_dep      = $(NvEGLUtil_cpp_debug_dep) $(NvEGLUtil_c_debug_dep)
+NvEGLUtil_debug_dep      = $(NvEGLUtil_cpp_debug_dep) $(NvEGLUtil_cc_debug_dep) $(NvEGLUtil_c_debug_dep)
 -include $(NvEGLUtil_debug_dep)
 NvEGLUtil_cpp_release_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.release.P, $(NvEGLUtil_cppfiles)))))
+NvEGLUtil_cc_release_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.release.P, $(NvEGLUtil_ccfiles)))))
 NvEGLUtil_c_release_dep      = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.release.P, $(NvEGLUtil_cfiles)))))
-NvEGLUtil_release_dep      = $(NvEGLUtil_cpp_release_dep) $(NvEGLUtil_c_release_dep)
+NvEGLUtil_release_dep      = $(NvEGLUtil_cpp_release_dep) $(NvEGLUtil_cc_release_dep) $(NvEGLUtil_c_release_dep)
 -include $(NvEGLUtil_release_dep)
 NvEGLUtil_debug_hpaths    := 
 NvEGLUtil_debug_hpaths    += ./../../../extensions/src/NvEGLUtil
@@ -22,6 +24,7 @@ NvEGLUtil_debug_lpaths    :=
 NvEGLUtil_debug_defines   := $(NvEGLUtil_custom_defines)
 NvEGLUtil_debug_defines   += ANDROID
 NvEGLUtil_debug_defines   += _LIB
+NvEGLUtil_debug_defines   += GL_API_LEVEL_ES2
 NvEGLUtil_debug_defines   += _DEBUG
 NvEGLUtil_debug_libraries := 
 NvEGLUtil_debug_common_cflags	:= $(NvEGLUtil_custom_cflags)
@@ -37,14 +40,15 @@ NvEGLUtil_debug_lflags    += $(addprefix -L, $(NvEGLUtil_debug_lpaths))
 NvEGLUtil_debug_lflags    += -Wl,--start-group $(addprefix -l, $(NvEGLUtil_debug_libraries)) -Wl,--end-group
 NvEGLUtil_debug_objsdir  = $(OBJS_DIR)/NvEGLUtil_debug
 NvEGLUtil_debug_cpp_o    = $(addprefix $(NvEGLUtil_debug_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.o, $(NvEGLUtil_cppfiles)))))
+NvEGLUtil_debug_cc_o    = $(addprefix $(NvEGLUtil_debug_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.o, $(NvEGLUtil_ccfiles)))))
 NvEGLUtil_debug_c_o      = $(addprefix $(NvEGLUtil_debug_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.o, $(NvEGLUtil_cfiles)))))
-NvEGLUtil_debug_obj      = $(NvEGLUtil_debug_cpp_o) $(NvEGLUtil_debug_c_o)
+NvEGLUtil_debug_obj      = $(NvEGLUtil_debug_cpp_o) $(NvEGLUtil_debug_cc_o) $(NvEGLUtil_debug_c_o)
 NvEGLUtil_debug_bin      := ./../../../extensions/lib/Tegra-Android/libNvEGLUtilD.a
 
 clean_NvEGLUtil_debug: 
-	@$(ECHO) clean NvEGLUtil debug
-	@$(RMDIR) $(NvEGLUtil_debug_objsdir)
-	@$(RMDIR) $(NvEGLUtil_debug_bin)
+	$(SILENT_FLAG)$(ECHO) clean NvEGLUtil debug
+	$(SILENT_FLAG)$(RMDIR) $(NvEGLUtil_debug_objsdir)
+	$(SILENT_FLAG)$(RMDIR) $(NvEGLUtil_debug_bin)
 
 build_NvEGLUtil_debug: postbuild_NvEGLUtil_debug
 postbuild_NvEGLUtil_debug: mainbuild_NvEGLUtil_debug
@@ -52,27 +56,37 @@ mainbuild_NvEGLUtil_debug: prebuild_NvEGLUtil_debug $(NvEGLUtil_debug_bin)
 prebuild_NvEGLUtil_debug:
 
 $(NvEGLUtil_debug_bin): $(NvEGLUtil_debug_obj) 
-	@mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvEGLUtilD.a`
-	@$(AR) rcs $(NvEGLUtil_debug_bin) $(NvEGLUtil_debug_obj)
-	@$(ECHO) building $@ complete!
+	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvEGLUtilD.a`
+	$(SILENT_FLAG)$(AR) rcs $(NvEGLUtil_debug_bin) $(NvEGLUtil_debug_obj)
+	$(SILENT_FLAG)$(ECHO) building $@ complete!
 
 NvEGLUtil_debug_DEPDIR = $(dir $(@))/$(*F)
 $(NvEGLUtil_debug_cpp_o): $(NvEGLUtil_debug_objsdir)/%.o:
-	@$(ECHO) NvEGLUtil: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cppfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CXX) $(NvEGLUtil_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cppfiles)) -o $@
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cppfiles))))))
-	@cp $(NvEGLUtil_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cppfiles))))).debug.P; \
+	$(SILENT_FLAG)$(ECHO) NvEGLUtil: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cppfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvEGLUtil_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cppfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cppfiles))))))
+	$(SILENT_FLAG)cp $(NvEGLUtil_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvEGLUtil_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cppfiles))))).debug.P; \
 	  rm -f $(NvEGLUtil_debug_DEPDIR).d
 
+$(NvEGLUtil_debug_cc_o): $(NvEGLUtil_debug_objsdir)/%.o:
+	$(SILENT_FLAG)$(ECHO) NvEGLUtil: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_ccfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvEGLUtil_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_ccfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_ccfiles))))))
+	$(SILENT_FLAG)cp $(NvEGLUtil_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_ccfiles))))).debug.P; \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+		-e '/^$$/ d' -e 's/$$/ :/' < $(NvEGLUtil_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_ccfiles))))).debug.P; \
+	  rm -f $(NvEGLUtil_debug_DEPDIR).d
+
 $(NvEGLUtil_debug_c_o): $(NvEGLUtil_debug_objsdir)/%.o:
-	@$(ECHO) NvEGLUtil: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CC) $(NvEGLUtil_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cfiles)) -o $@ 
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cfiles))))))
-	@cp $(NvEGLUtil_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cfiles))))).debug.P; \
+	$(SILENT_FLAG)$(ECHO) NvEGLUtil: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CC) $(NvEGLUtil_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cfiles)) -o $@ 
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cfiles))))))
+	$(SILENT_FLAG)cp $(NvEGLUtil_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvEGLUtil_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_debug_objsdir),, $@))), $(NvEGLUtil_cfiles))))).debug.P; \
 	  rm -f $(NvEGLUtil_debug_DEPDIR).d
@@ -88,6 +102,7 @@ NvEGLUtil_release_lpaths    :=
 NvEGLUtil_release_defines   := $(NvEGLUtil_custom_defines)
 NvEGLUtil_release_defines   += ANDROID
 NvEGLUtil_release_defines   += _LIB
+NvEGLUtil_release_defines   += GL_API_LEVEL_ES2
 NvEGLUtil_release_defines   += NDEBUG
 NvEGLUtil_release_libraries := 
 NvEGLUtil_release_common_cflags	:= $(NvEGLUtil_custom_cflags)
@@ -103,14 +118,15 @@ NvEGLUtil_release_lflags    += $(addprefix -L, $(NvEGLUtil_release_lpaths))
 NvEGLUtil_release_lflags    += -Wl,--start-group $(addprefix -l, $(NvEGLUtil_release_libraries)) -Wl,--end-group
 NvEGLUtil_release_objsdir  = $(OBJS_DIR)/NvEGLUtil_release
 NvEGLUtil_release_cpp_o    = $(addprefix $(NvEGLUtil_release_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.o, $(NvEGLUtil_cppfiles)))))
+NvEGLUtil_release_cc_o    = $(addprefix $(NvEGLUtil_release_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.o, $(NvEGLUtil_ccfiles)))))
 NvEGLUtil_release_c_o      = $(addprefix $(NvEGLUtil_release_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.o, $(NvEGLUtil_cfiles)))))
-NvEGLUtil_release_obj      = $(NvEGLUtil_release_cpp_o) $(NvEGLUtil_release_c_o)
+NvEGLUtil_release_obj      = $(NvEGLUtil_release_cpp_o) $(NvEGLUtil_release_cc_o) $(NvEGLUtil_release_c_o)
 NvEGLUtil_release_bin      := ./../../../extensions/lib/Tegra-Android/libNvEGLUtil.a
 
 clean_NvEGLUtil_release: 
-	@$(ECHO) clean NvEGLUtil release
-	@$(RMDIR) $(NvEGLUtil_release_objsdir)
-	@$(RMDIR) $(NvEGLUtil_release_bin)
+	$(SILENT_FLAG)$(ECHO) clean NvEGLUtil release
+	$(SILENT_FLAG)$(RMDIR) $(NvEGLUtil_release_objsdir)
+	$(SILENT_FLAG)$(RMDIR) $(NvEGLUtil_release_bin)
 
 build_NvEGLUtil_release: postbuild_NvEGLUtil_release
 postbuild_NvEGLUtil_release: mainbuild_NvEGLUtil_release
@@ -118,30 +134,40 @@ mainbuild_NvEGLUtil_release: prebuild_NvEGLUtil_release $(NvEGLUtil_release_bin)
 prebuild_NvEGLUtil_release:
 
 $(NvEGLUtil_release_bin): $(NvEGLUtil_release_obj) 
-	@mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvEGLUtil.a`
-	@$(AR) rcs $(NvEGLUtil_release_bin) $(NvEGLUtil_release_obj)
-	@$(ECHO) building $@ complete!
+	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvEGLUtil.a`
+	$(SILENT_FLAG)$(AR) rcs $(NvEGLUtil_release_bin) $(NvEGLUtil_release_obj)
+	$(SILENT_FLAG)$(ECHO) building $@ complete!
 
 NvEGLUtil_release_DEPDIR = $(dir $(@))/$(*F)
 $(NvEGLUtil_release_cpp_o): $(NvEGLUtil_release_objsdir)/%.o:
-	@$(ECHO) NvEGLUtil: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cppfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CXX) $(NvEGLUtil_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cppfiles)) -o $@
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cppfiles))))))
-	@cp $(NvEGLUtil_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cppfiles))))).release.P; \
+	$(SILENT_FLAG)$(ECHO) NvEGLUtil: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cppfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvEGLUtil_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cppfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cppfiles))))))
+	$(SILENT_FLAG)cp $(NvEGLUtil_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvEGLUtil_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cppfiles))))).release.P; \
 	  rm -f $(NvEGLUtil_release_DEPDIR).d
 
+$(NvEGLUtil_release_cc_o): $(NvEGLUtil_release_objsdir)/%.o:
+	$(SILENT_FLAG)$(ECHO) NvEGLUtil: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_ccfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvEGLUtil_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_ccfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_ccfiles))))))
+	$(SILENT_FLAG)cp $(NvEGLUtil_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_ccfiles))))).release.P; \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+		-e '/^$$/ d' -e 's/$$/ :/' < $(NvEGLUtil_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_ccfiles))))).release.P; \
+	  rm -f $(NvEGLUtil_release_DEPDIR).d
+
 $(NvEGLUtil_release_c_o): $(NvEGLUtil_release_objsdir)/%.o:
-	@$(ECHO) NvEGLUtil: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CC) $(NvEGLUtil_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cfiles)) -o $@ 
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cfiles))))))
-	@cp $(NvEGLUtil_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cfiles))))).release.P; \
+	$(SILENT_FLAG)$(ECHO) NvEGLUtil: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CC) $(NvEGLUtil_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cfiles)) -o $@ 
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cfiles))))))
+	$(SILENT_FLAG)cp $(NvEGLUtil_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvEGLUtil_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvEGLUtil_release_objsdir),, $@))), $(NvEGLUtil_cfiles))))).release.P; \
 	  rm -f $(NvEGLUtil_release_DEPDIR).d
 
 clean_NvEGLUtil:  clean_NvEGLUtil_debug clean_NvEGLUtil_release
-	@rm -rf $(DEPSDIR)
+	$(SILENT_FLAG)rm -rf $(DEPSDIR)

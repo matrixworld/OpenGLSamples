@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NV/NvTokenizer.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -70,8 +70,8 @@ private:
 public:
     NvTokenizer(const char* src, const char* delims=NULL)
     : mSrcBuf(src)
-    , mTermChar(0)
     , mTokLen(0)
+    , mTermChar(0)
     , mNumDelims(0)
     , mVerbose(false)
     , mConsumeWS(true)
@@ -189,8 +189,8 @@ public:
         }
 
         while (!atEOF()) { // termchar is already null so fine to exit loop.
-            // look for hard terminations (right now, EOL and whitespace)
-            if (isTerm(*mSrcBuf)) {
+            // look for hard terminations (EOL)
+            if (isEOL(*mSrcBuf)) {
                 mTermChar = *mSrcBuf;
                 break;
             }
@@ -202,7 +202,7 @@ public:
                     mTermChar = startedWithQuote;
                     break;
                 }
-            } else if (isDelim(*mSrcBuf)) {
+            } else if (isDelim(*mSrcBuf) || isWhitespace(*mSrcBuf)) {
                 // just break, leave delim.
                 mTermChar = *mSrcBuf;
                 break;
@@ -276,8 +276,10 @@ public:
     /// get next token as a std::string
     bool getTokenString(std::string& returnTok)
     {
-        if (!readToken())
+        if (!readToken()) {
+            returnTok.clear();
             return false;
+        }
         returnTok.assign(mTokBuf);
         return true;
     }
@@ -285,8 +287,10 @@ public:
     /// get next token as a char array with maximum size.
     bool getTokenString(char out[], const uint32_t outmax)
     {
-        if (!readToken())
+        if (!readToken()) {
+            out[0] = 0;
             return false;
+        }
 
         // note mTokLen include the NULL terminator.
         if (mTokLen>outmax)
@@ -303,8 +307,10 @@ public:
     /// get next token as a floating-point number
     bool getTokenFloat(float &out)
     {
-        if (!readToken())
+        if (!readToken()) {
+            out = 0;
             return false;
+        }
         out = (float)strtod(mTokBuf, NULL);
         return true;
     }
@@ -362,8 +368,10 @@ public:
     /// get next token as an integer
     bool getTokenInt(int32_t &out)
     {
-        if (!readToken())
+        if (!readToken()) {
+            out = 0;
             return false;
+        }
         out = (int32_t)strtol(mTokBuf, NULL, 0);
         return true;
     }
@@ -371,8 +379,10 @@ public:
     /// get next token as an unsigned integer
     bool getTokenUint(uint32_t &out)
     {
-        if (!readToken())
+        if (!readToken()) {
+            out = 0;
             return false;
+        }
         out = (uint32_t)strtoul(mTokBuf, NULL, 0);
         return true;
     }
@@ -380,8 +390,10 @@ public:
     /// get next token as some form of boolean value/string
     bool getTokenBool(bool &out)
     {
-        if (!readToken())
+        if (!readToken()) {
+            out = false;
             return false;
+        }
         if (mTokLen==1 &&
             (mTokBuf[0]=='0' || mTokBuf[0]=='1') ) {
             out = (mTokBuf[0]=='1');

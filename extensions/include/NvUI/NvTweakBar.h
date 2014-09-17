@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvUI/NvTweakBar.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -221,7 +221,7 @@ private:
     NvPackedColor m_valueColor;
 
     NvUIGraphic *MakeFocusFrame();
-    NvUIPopup *MakeStdPopup(const char* name, NvTweakEnumVar<uint32_t> &refvar, NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode=0);
+    NvUIPopup *MakeStdPopup(const char* name, NvTweakEnumVar<uint32_t> &refvar, const NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode=0);
     NvUIButton *MakeStdButton(const char* name, bool val, NvUIButtonType::Enum type=NvUIButtonType::CHECK, uint32_t code=0, uint32_t subcode=0);
     NvUISlider *MakeStdSlider(const char* name, float val, float min, float max, float step=0, bool integral=false, uint32_t code=0);
 
@@ -447,14 +447,14 @@ public:
         a radio-button group for two or three enum values, and a dropdown menu for
         four or more values.
     */
-    NvTweakVarBase* addEnum(const char *name, uint32_t &var, NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode=0);
+    NvTweakVarBase* addEnum(const char *name, uint32_t &var, const NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode=0);
 
     /** Add an integral variable to the Tweakbar as a dropdown menu 
         with an enumerated set of values.
         This method tracks and modifies the supplied variable using the passed in
         array of NvTweakEnum string-value pairs as the menu items in a dropdown menu.
     */
-    NvTweakVarBase* addMenu(const char *name, uint32_t &var, NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode=0);
+    NvTweakVarBase* addMenu(const char *name, uint32_t &var, const NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode=0);
     /**  @}  */
 };
 

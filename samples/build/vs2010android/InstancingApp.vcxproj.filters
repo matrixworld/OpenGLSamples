@@ -5,11 +5,35 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\InstancingApp\InstancingApp.cpp">
+		<ClCompile Include="..\..\es2-aurora\InstancingApp\InstancingApp.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\InstancingApp\InstancingApp.h">
+		<ClInclude Include="..\..\es2-aurora\InstancingApp\InstancingApp.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\InstancingApp\assets\shaders\boxes.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\InstancingApp\assets\shaders\grass.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\InstancingApp\assets\shaders\boxes.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\InstancingApp\assets\shaders\boxes_instanced.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\InstancingApp\assets\shaders\grass.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\InstancingApp\assets\shaders\grass_instanced.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

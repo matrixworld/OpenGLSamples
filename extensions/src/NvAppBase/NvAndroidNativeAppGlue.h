@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvAndroidNativeAppGlue.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //----------------------------------------------------------------------------------
@@ -196,6 +196,10 @@ struct android_app {
     int msgread;
     int msgwrite;
 
+    int renderRead;
+    int renderWrite;
+    int usesChoreographer;
+
     pthread_t thread;
 
     unsigned int lifecycleFlags;
@@ -234,10 +238,16 @@ enum {
      */
     LOOPER_ID_INPUT = 2,
 
+
+    /**
+     * Looper data ID of redraw events.
+     */
+    NV_LOOPER_ID_REDRAW = 3,
+
     /**
      * Start of user-defined ALooper identifiers.
      */
-    LOOPER_ID_USER = 3,
+    LOOPER_ID_USER = 4,
 };
 
 enum {
@@ -340,6 +350,9 @@ enum {
      * and waiting for the app thread to clean up and exit before proceeding.
      */
     APP_CMD_DESTROY,
+
+    // offset value for pushing commands from the Java level
+    NV_APP_CMD_USER
 };
 
 // NV extensions to return the current status of the app's activity
@@ -374,6 +387,18 @@ int nv_app_get_display_rotation(struct android_app* android_app);
 // for onAppCmd and onInputEvent.  This is mainly for extreme errors during startup.
 // It is not recommended for general use, since it circumvents the app's handling code
 void nv_app_force_quit_no_cleanup(struct android_app* android_app);
+
+int nv_app_is_redraw(int ident);
+
+int64_t nv_app_process_redraw(struct android_app* android_app);
+
+// In the case of a blocking main event loop, this call queues a forced redraw
+// command that will "awaken" the event loop and trigger a render
+void nv_app_post_redraw(struct android_app* android_app, int64_t time);
+
+int32_t nv_android_app_loop_wait(struct android_app* android_app);
+
+int32_t nv_android_app_free_redraw(struct android_app* android_app);
 
 /**
  * Call when ALooper_pollAll() returns LOOPER_ID_MAIN, reading the next

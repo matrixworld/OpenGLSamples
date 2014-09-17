@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvUI/NvBitFont.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -50,14 +50,13 @@
     <ul>
         <li> Load multiple bitmap fonts simultaneously, from compressed/DDS files, with or without mipmaps </li>
         <li> Handle extended ASCII character codes </li>
-        <li> Manage multi-style fonts, thus able to combine normal and bold 'runs' of text styling in a single string. </li>
+        <li> Manage multi-style fonts, thus able to combine normal and "bold" styling in a single string. </li>
         <li> Render text aligned to screen edges or any sub-rect 'box' on the screen </li>
         <li> Support multi-line output, including auto-wrapping </li>
         <li> Apply a specific font, size, base color, and multiplied color to each string </li>
-        <li> Optionally apply drop-shadowing under the text for more 'pop' </li>
+        <li> Optionally apply drop-shadowing to a text run </li>
         <li> Optionally embed special escape codes for on-the-fly color or style changes </li>
         <li> Given screen size (and rotation), can automatically re-scale and rotate text output </li>
-        <li> Allow overriding the default shader to implement custom raster effects </li>
         <li> Allow overriding the default matrix calc to apply custom transformations to text </li>
     </ul>
  */
@@ -155,7 +154,10 @@ typedef enum
 #define NvBF_COLORSTR_NORMAL    "\007"
 /* @} */
 
+// forward delcare private class so we can hold pointer to it.
 class NvBitFont;
+// forward declare private struct so we can hold pointer to data block
+struct BFVert;
 
 /** @name BitFont System Creation & Global Property Accessors
 
@@ -196,18 +198,11 @@ void NvBFGetScreenRes(float *width, float *height);
 /** Set the rotation/orientation of text output (in 90-degree increments, preferably). */
 void NvBFSetScreenRot(float degrees);
 
+/** Set automatic save/restore of GL state when rendering text.  Defaults false as it's heavyweight.*/
+void NvBFSetSaveRestoreState(bool enable);
+
 /* @} */
 
-// forward declare NvBFText, as we internally reference for linked list.
-class NvBFText;
-
-// this is really a private struct, we may want to re-hide in the .cpp. !!!!TBD TODO
-struct BFVert
-{
-    float pos[2]; // 8 or 12 bytes, depending on how we add Z support. !!!!TBD
-    float uv[2]; // 8 bytes => 16 or 20 total.
-    uint32_t color; // packed 4 byte color => 20 or 24 total.  ABGR with A << 24...
-};
 
 class NvBFText
 {
@@ -229,26 +224,30 @@ public:
 
     /** Set the RGBA color (using an @ref NvPackedColor) for a line of text.
         Since colors are per-character (stored in vertex data), changing the global text color
-        requires a rebuild of the string buffers.  If your intent is trying to fade (alpha),
-        or otherwise color-modulate a string on the fly, you can avoid rebuilding the cache
-        by using @p SetMultiplyColor instead.
+        requires a rebuild of the string buffers.
         NOTE: Embedded color literals/escapes inside the string data itself will take precedence
         over this string-global color value.
     */
     void SetColor(NvPackedColor color);
-    /** Set the RGBA color (an @ref NvPackedColor) for a line of text.  As this color is multiplied
-        in hardware, it doesn't require recaching the optimized vertex data for the string, thus
-        allows for easy per-bftext alpha-fades and color modulation. */
-    void SetMultiplyColor(NvPackedColor color);
+
     /** Set the drop-shadow for a bftext.
 
         Activates a drop-shadow effect on given bftext output.
 
-        @param bftin the bftext to modify
         @param offset the +/- offset of the shadow from the base, in 'texels' (not pixels)
         @param color the shadow color as an @ref NvPackedColor
      */
     void SetShadow(char offset, NvPackedColor color); // !!!!TBD would be more useful in pixel space
+
+    /** Set the outline mode for a bftext.
+
+        Enables/disable an outline effect on given bftext output.
+
+        @param outline true to enable, false to disable.
+        @param color the outline color as an @ref NvPackedColor
+     */
+    void SetOutline(bool outline, NvPackedColor color);
+
     /** Draw less than the full string.
 
         Switches bftext to draw only first @p num characters in a bftext string.
@@ -263,25 +262,28 @@ public:
         Sets a subrect in the given screen size, in which processes such as alignment,
         multi-line wrapping, will occur.
 
-        @param bftin the bftext to modify
         @param width left/right alignment 'edges' (and wrap/clip boundary).
         @param height top/bottom alignment 'edges'.
         @param lines if greater than zero, specifies width is used to wrap text, and how many lines to wrap.
         @param dots if greater than zero, specifies a character to repeat three times when needs wrap but out of lines.
      */
     void SetBox(float width, float height, int32_t lines, uint32_t dots);
+
     /** Helper to quickly update width and height of previously-set text box. */
     void UpdateBox(float width, float height);
 
     /** Select font 'face' to use for this bftext (font ID from NvBFGetFontID). */
     void SetFont(uint8_t font);
+
     /** Set the output size of text in destination-space pixels, dependent on input font size/scale. */
     void SetSize(float size);
+
     /** Set the text string for a given bftext. */
     void SetString(const char* str);
 
     /** Get the last calculated output width of the bftext string. */
     float GetWidth();
+
     /** Get the last calculated output height of the bftext. */
     float GetHeight();
 
@@ -325,6 +327,7 @@ public:
         looping over an array of text elements on screen.
      */
     void RenderPrep(void);
+
     /** Conclude rendering of bftexts, making it safe to do other GLES calls. */
     void RenderDone(void);
 
@@ -351,7 +354,6 @@ public:
         so that it only recomputes the cached data once, regardless of the number of
         states changed for that text since the previous render or rebuild call.
 
-        @param bftin the bftext to modify
         @param internal should be set to false, unless being called by an internal
         BitFont function which has already established the VBOs for this bftext.
      */
@@ -372,7 +374,7 @@ protected:
     int32_t m_stringCharsOut; // since string can have escape codes, need a sep count of REAL to output.
     int32_t m_drawnChars; // allowing 'clamping' the number of chars to actually draw.
 
-    struct BFVert *m_data;
+    BFVert *m_data;
     uint32_t m_vbo;
     
     int32_t m_numLines;
@@ -408,6 +410,9 @@ protected:
     
     char m_shadowDir; // signed so we can use it as shift amount
     NvPackedColor m_shadowColor;
+
+    bool m_outline;
+    NvPackedColor m_outlineColor;
     
     float m_pixelsWide;
     float m_pixelsHigh; // size of text.

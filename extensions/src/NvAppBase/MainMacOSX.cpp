@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/MainMacOSX.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -141,6 +141,7 @@ public:
         glfwWindowHint(GLFW_ALPHA_BITS, config.alphaBits);
         glfwWindowHint(GLFW_DEPTH_BITS, config.depthBits);
         glfwWindowHint(GLFW_STENCIL_BITS, config.stencilBits);
+        glfwWindowHint(GLFW_SAMPLES, config.msaaSamples);
     }
 
     void setWindow(GLFWwindow* window) {
@@ -195,7 +196,11 @@ protected:
 
 class NvMacPlatformContext : public NvPlatformContext {
 public:
-    NvMacPlatformContext() : mWindow(NULL), mGamepad(NULL) { }
+    NvMacPlatformContext() : 
+        mWindow(NULL), 
+        mGamepad(NULL),
+        mRenderOnDemand(false),
+        mRenderRequested(false) { }
     ~NvMacPlatformContext() { delete mGamepad; }
 
     void setWindow(GLFWwindow* window) {
@@ -213,10 +218,16 @@ public:
     virtual void setAppTitle(const char* title) { if (mWindow) glfwSetWindowTitle(mWindow, title); }
     virtual const std::vector<const char*>& getCommandLine() { return m_commandLine; }
 
+    virtual NvRedrawMode::Enum getRedrawMode() { return mRenderOnDemand ? NvRedrawMode::ON_DEMAND : NvRedrawMode::UNBOUNDED; }
+    virtual void setRedrawMode(NvRedrawMode::Enum mode) { mRenderOnDemand = (mode == NvRedrawMode::ON_DEMAND); }
+    virtual void requestRedraw() { mRenderRequested = true; }
+
     std::vector<const char*> m_commandLine;
 protected:
     GLFWwindow* mWindow;
     NvGamepad* mGamepad;
+    bool mRenderOnDemand;
+    bool mRenderRequested;
 };
 
 bool NvMacPlatformContext::isAppRunning() {
@@ -245,7 +256,12 @@ bool NvMacPlatformContext::shouldRender() {
         if (sForcedRenderCount > 0)
             sForcedRenderCount--;
 
-        return true;
+        if (!mRenderOnDemand || mRenderRequested) {
+            mRenderRequested = false;
+            return true;
+        } else {
+            return false;
+        }
     }
     return false;
 }

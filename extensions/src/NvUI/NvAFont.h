@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvUI/NvAFont.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -55,6 +55,7 @@ struct AFontInfo {
     float m_stretchHeight;
     float m_padding[4];
     float m_spacing[2];
+    float m_outline;
     int32_t m_charCount;
 };
 
@@ -63,6 +64,8 @@ struct AFontCharCommon {
     float m_baseline;
     float m_pageWidth;
     float m_pageHeight;
+    float m_pageWidthInv; // precalc inverse.
+    float m_pageHeightInv;
     char m_filename[MAX_AFONT_FILENAME_LEN];
     int32_t m_pageID;
 };
@@ -109,25 +112,30 @@ struct AFontTokenizer : public NvTokenizer
             return false;
         if (!requireTokenDelim("size") || !getTokenFloat(finfo.m_size))
             return false;
-        if (!requireTokenDelim("bold") || !getTokenBool(finfo.m_isBold))
+        if (!requireTokenDelim("bold"))
             return false;
-        if (!requireTokenDelim("italic") || !getTokenBool(finfo.m_isItalic))
+        getTokenBool(finfo.m_isBold); // can return false/0
+        if (!requireTokenDelim("italic"))
             return false;
-        if (!requireTokenDelim("charset") || !getTokenString(finfo.m_charset, sizeof(finfo.m_charset)))
+        getTokenBool(finfo.m_isItalic);
+        if (!requireTokenDelim("charset"))
             return false;
-        if (!requireTokenDelim("unicode") || !getTokenBool(finfo.m_isUnicode))
+        getTokenString(finfo.m_charset, sizeof(finfo.m_charset));
+        if (!requireTokenDelim("unicode"))
             return false;
+        getTokenBool(finfo.m_isUnicode);
         if (!requireTokenDelim("stretchH") || !getTokenFloat(finfo.m_stretchHeight))
             return false;
         // don't care about these values or errors on them.
-        requireTokenDelim("smooth"); getTokenFloat(tmpf);
-        requireTokenDelim("aa"); getTokenFloat(tmpf);
+        if (requireTokenDelim("smooth")) getTokenFloat(tmpf);
+        if (requireTokenDelim("aa")) getTokenFloat(tmpf);
         // read arrays....
         if (!requireTokenDelim("padding") || 4!=getTokenFloatArray(finfo.m_padding, 4))
             return false;
         if (!requireTokenDelim("spacing") || 2!=getTokenFloatArray(finfo.m_spacing, 2))
             return false;
-        // optional, don't exit fail just if missing.
+        // not required, but we will store if we get it.
+        if (requireTokenDelim("outline")) getTokenFloat(finfo.m_outline);
         //requireTokenDelim("outline"); getTokenFloat(finfo.m_size);
 
         consumeToEOL();
@@ -148,10 +156,14 @@ struct AFontTokenizer : public NvTokenizer
             return false;
         if (!requireTokenDelim("base") || !getTokenFloat(fcommon.m_baseline))
             return false;
-        if (!requireTokenDelim("scaleW") || !getTokenFloat(fcommon.m_pageWidth))
+        if (!requireTokenDelim("scaleW") || !getTokenFloat(fcommon.m_pageWidth)
+            || fcommon.m_pageWidth<1 )
             return false;
-        if (!requireTokenDelim("scaleH") || !getTokenFloat(fcommon.m_pageHeight))
+        fcommon.m_pageWidthInv = 1.0f/fcommon.m_pageWidth;
+        if (!requireTokenDelim("scaleH") || !getTokenFloat(fcommon.m_pageHeight)
+            || fcommon.m_pageWidth<1 )
             return false;
+        fcommon.m_pageHeightInv = 1.0f/fcommon.m_pageHeight;
 
         // don't care about these values or errors on them right now...
         requireTokenDelim("pages"); getTokenInt(tmpi);

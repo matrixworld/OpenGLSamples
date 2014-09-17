@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvUI/NvUI.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -40,6 +40,7 @@
 #include <NvUI/NvGestureEvent.h>
 #include "NvUI/NvPackedColor.h"
 #include "NV/NvVector.h"
+#include "NV/NvTime.h"
 
 #include <string.h>
 #include <string>
@@ -87,13 +88,6 @@ class NvBFText;
 
 /** This macro offers "INHERITED::" access to superclass in each NvUI class. */
 #define INHERIT_FROM(c) typedef c INHERITED;
-
-/** Generalize a 64-bit integer time value in microseconds. */
-typedef uint64_t               NvUST; // U64 unadjusted system time value
-/** Convert 64-bit usecs value to floating-point seconds. */
-#define UST2SECS(t)     ((double)(((double)(t)) / 1.0e9));
-/** Convert floating-point seconds to a 64-bit usecs value. */
-#define SECS2UST(t)     ((NvUST)(((double)(t)) * 1.0e9));
 
  
 /** Event handling response flags.
@@ -1305,6 +1299,7 @@ protected:
     NvGestureUID m_reactGestureUID;  /**< A gesture event UID of the last gesture that we triggered/reacted to, so we can quickly ignore further @p HandleEvent calls until the gesture UID increments. */
     NvGestureUID m_failedHitUID; /**< A gesture event UID of the last gesture that failed to hit the button, so we can quickly ignore further @p HandleEvent calls until the gesture UID increments. */
     bool m_wasHit; /**< Used by @p HandleEvent and internal hit-tracking.  Set when we had a successful press/click in the thumb, so we are then tracking for drag/flick/release. */
+    bool m_reactOnPress; /**< When the button should be triggered on the initial press and not wait for release. */
 
     float m_hitMarginWide; /**< An extra 'padding' or margin added to the button's normal hit-test width, in order to allow for a larger test region than the button's visual.  Important for touchscreen+finger interactivity. */
     float m_hitMarginTall; /**< An extra 'padding' or margin added to the button's normal hit-test height, in order to allow for a larger test region than the button's visual.  Important for touchscreen+finger interactivity. */
@@ -1402,8 +1397,11 @@ public:
     /** Accessor to get the reaction sub-code for this button. */
     uint32_t GetSubCode() { return m_subcode; };
 
-    /** Set whether to retain the pressed-in even if user drags outside the hit rect. */
+    /** Set whether to retain pressed-in state even if user drags outside the hit rect. */
     void SetStickyClick(bool b) { m_stickyClick = b; };
+
+    /** Set whether to react on the press rather than the release. */
+    void SetReactOnPress(bool b) { m_reactOnPress = b; };
 
     /** Allow us to flag that we reacted to this gesture, so we don't handle again until new gesture UID. */
     void ConsumeGesture(const NvGestureEvent& ev) { m_reactGestureUID = ev.uid; }
@@ -1517,12 +1515,14 @@ public:
     {
         m_background = bg;
     };
+
     /** Set whether or not to consume all unhandled input within our bounding rect. */
     void SetConsumeClicks(bool b)
     {
         m_consumeClicks = b;
     };
 
+    /** Set the visual highlight/framing shown around element in the container that has input focus. */
     void SetFocusHilite(NvUIGraphic *hilite) // we should refcount users...
     {
         m_focusHilite = hilite;

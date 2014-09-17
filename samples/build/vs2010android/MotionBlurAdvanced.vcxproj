@@ -23,7 +23,7 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-14</AndroidTargetAPI>
+		<AndroidTargetAPI>android-18</AndroidTargetAPI>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'" Label="Configuration">
 		<ConfigurationType>Application</ConfigurationType>
@@ -31,7 +31,7 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-14</AndroidTargetAPI>
+		<AndroidTargetAPI>android-18</AndroidTargetAPI>
 	</PropertyGroup>
 	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 	<ImportGroup Label="ExtensionSettings">
@@ -44,7 +44,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../bin/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/MotionBlurAdvanced/Tegra-Android/debug</IntDir>
+		<IntDir>./intermediate/MotionBlurAdvanced/Tegra-Android/debug/</IntDir>
 		<TargetExt>.so</TargetExt>
 		<TargetName>libMotionBlurAdvanced</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -55,14 +55,14 @@
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../MotionBlurAdvanced;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;USE_REGAL=1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/MotionBlurAdvanced;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES3;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 		</ClCompile>
 		<Link>
-			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -lGLESv2 -landroid -lm -lsupc++ -lgcc -lRegalW_static -Wl,--end-group</AdditionalOptions>
+			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -landroid -lm -lGLESv3 -Wl,--end-group</AdditionalOptions>
 			<OutputFile>$(OutDir)libMotionBlurAdvanced.so</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/Tegra-Android;./../../../extensions/lib/Tegra-Android;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/libMotionBlurAdvanced.so.pdb</ProgramDatabaseFile>
@@ -70,8 +70,8 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../MotionBlurAdvanced</AntBuildPath>
-			<JavaSourceDir>src/../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
+			<AntBuildPath>$(ProjectDir)./../../es3aep-kepler/MotionBlurAdvanced</AntBuildPath>
+			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
 		</AntBuild>
@@ -83,7 +83,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../bin/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/MotionBlurAdvanced/Tegra-Android/release</IntDir>
+		<IntDir>./intermediate/MotionBlurAdvanced/Tegra-Android/release/</IntDir>
 		<TargetExt>.so</TargetExt>
 		<TargetName>libMotionBlurAdvanced</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -94,14 +94,14 @@
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../MotionBlurAdvanced;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;USE_REGAL=1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/MotionBlurAdvanced;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES3;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 		</ClCompile>
 		<Link>
-			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -lGLESv2 -landroid -lm -lsupc++ -lgcc -lRegalW_static -Wl,--end-group</AdditionalOptions>
+			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -landroid -lm -lGLESv3 -Wl,--end-group</AdditionalOptions>
 			<OutputFile>$(OutDir)libMotionBlurAdvanced.so</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/Tegra-Android;./../../../extensions/lib/Tegra-Android;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/libMotionBlurAdvanced.so.pdb</ProgramDatabaseFile>
@@ -109,8 +109,8 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../MotionBlurAdvanced</AntBuildPath>
-			<JavaSourceDir>src/../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
+			<AntBuildPath>$(ProjectDir)./../../es3aep-kepler/MotionBlurAdvanced</AntBuildPath>
+			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
 		</AntBuild>
@@ -125,10 +125,46 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 	</PropertyGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\MotionBlurAdvanced\MotionBlurAdvanced.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\MotionBlurAdvanced\MotionBlurAdvanced.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\MotionBlurAdvanced\MotionBlurAdvanced.h">
+		<ClInclude Include="..\..\es3aep-kepler\MotionBlurAdvanced\MotionBlurAdvanced.h">
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\depthdraw.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\gather.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\motionblures2.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\neighbormax.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\scenecolor.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\scenevelocity.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\skyboxcolor.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\skyboxvelocity.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\texcoordfullscreen.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\tilemax.frag">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\baseshader.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\motionblures2.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\scenecolor.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\scenevelocity.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\skyboxcolor.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\skyboxvelocity.vert">
+		</None>
+		<None Include="..\..\es3aep-kepler\MotionBlurAdvanced\assets\shaders\texcoordfullscreen.vert">
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="./../../../extensions/externals/build/vs2010android/Half.vcxproj">

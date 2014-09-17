@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvUI/NvTweakVar.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -240,11 +240,14 @@ struct NvTweakEnum
 */
 template<class T>
 struct NvTweakEnumVar : public NvTweakVar<T> {
+protected:
     NvTweakEnum<T> *m_enumVals;
     uint32_t m_enumValCount;
     uint32_t m_enumIndex;
 
-    NvTweakEnumVar( NvTweakEnum<T> enumVals[], uint32_t enumValCount, T& refVal, const char* name, T minVal, T maxVal, T step, char *description=NULL)
+public:
+    /** Basic constructor for making an NvTweakEnumVar from a list of enum values */
+    NvTweakEnumVar( const NvTweakEnum<T> enumVals[], uint32_t enumValCount, T& refVal, const char* name, T minVal, T maxVal, T step, char *description=NULL)
     : NvTweakVar<T>( refVal, name, minVal, maxVal, step, description )
     , m_enumValCount(enumValCount)
     , m_enumIndex(0) // until set later...
@@ -257,11 +260,13 @@ struct NvTweakEnumVar : public NvTweakVar<T> {
         }
     }
 
-    ~NvTweakEnumVar()
+    /** Default destructor */
+    virtual ~NvTweakEnumVar()
     {
         delete[] m_enumVals;
     }
 
+    /** Array operator for accessing the values of the contained enum */
     T& operator[](const uint32_t index)
     {
         if (index>=m_enumValCount)
@@ -269,7 +274,7 @@ struct NvTweakEnumVar : public NvTweakVar<T> {
         return m_enumVals[index].m_value;
     }
 
-    /** Specific implementation of increment for the templated datatype. */
+    /** Implementation of increment that incs internal index into enum value array, and sets based on enum value. */
     virtual void increment() {
         if (m_enumIndex==m_enumValCount-1)
             m_enumIndex = 0;
@@ -278,7 +283,7 @@ struct NvTweakEnumVar : public NvTweakVar<T> {
         this->mValRef = m_enumVals[m_enumIndex];
     }
 
-    /** Specific implementation of decrement for the templated datatype. */
+    /** Implementation of decrement that decs internal index into enum value array, and sets based on enum value. */
     virtual void decrement() {
         if (m_enumIndex==0)
             m_enumIndex = m_enumValCount-1;

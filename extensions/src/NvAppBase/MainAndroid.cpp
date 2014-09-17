@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/MainAndroid.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -126,7 +126,7 @@ private:
 };
 
 
-static NvEGLConfiguration sDefaultConfig(NvGfxAPIVersionES2(), 8, 8, 8, 8, 16, 0);
+static NvEGLConfiguration sDefaultConfig(NvGfxAPIVersionES2(), 8, 8, 8, 8, 16, 0, 0);
 
 static bool localEGLChooser(EGLDisplay disp, EGLint apiSupport, EGLConfig& bestConfig, EGLint& api, EGLint& apiMajVer, EGLint& apiMinVer)
 {
@@ -173,6 +173,7 @@ static bool localEGLChooser(EGLDisplay disp, EGLint apiSupport, EGLConfig& bestC
         EGLint depthBits = 0;
         EGLint stencilBits = 0;
         EGLint renderableFlags = 0;
+        EGLint msaaSamples = 0;
 
         eglGetConfigAttrib(disp, configs[i], EGL_SURFACE_TYPE, &surfaceType);
         eglGetConfigAttrib(disp, configs[i], EGL_BLUE_SIZE, &blueBits);
@@ -182,8 +183,9 @@ static bool localEGLChooser(EGLDisplay disp, EGLint apiSupport, EGLConfig& bestC
         eglGetConfigAttrib(disp, configs[i], EGL_DEPTH_SIZE, &depthBits);
         eglGetConfigAttrib(disp, configs[i], EGL_STENCIL_SIZE, &stencilBits);
         eglGetConfigAttrib(disp, configs[i], EGL_RENDERABLE_TYPE, &renderableFlags);
-        LOGI("Config[%d]: R%dG%dB%dA%d D%dS%d Type=%04x Render=%04x",
-            i, redBits, greenBits, blueBits, alphaBits, depthBits, stencilBits, surfaceType, renderableFlags);
+        eglGetConfigAttrib(disp, configs[i], EGL_SAMPLES, &msaaSamples);
+        LOGI("Config[%d]: R%dG%dB%dA%d D%dS%d MSAA=%d  Type=%04x Render=%04x",
+            i, redBits, greenBits, blueBits, alphaBits, depthBits, stencilBits, msaaSamples, surfaceType, renderableFlags);
 
         if ((surfaceType & EGL_WINDOW_BIT) == 0)
             continue;
@@ -201,6 +203,8 @@ static bool localEGLChooser(EGLDisplay disp, EGLint apiSupport, EGLConfig& bestC
         penalty = alphaBits - sDefaultConfig.alphaBits;
         match += penalty * penalty;
         penalty = stencilBits - sDefaultConfig.stencilBits;
+        match += penalty * penalty;
+        penalty = msaaSamples - sDefaultConfig.msaaSamples;
         match += penalty * penalty;
 
         if ((match < bestMatch) || (bestIndex == -1))
@@ -254,6 +258,7 @@ void android_main(struct android_app* app) {
     }
 
     NvAppBase* sdkapp = NvAppFactory(engine);
+    engine->mAppBase = sdkapp;
 
     sdkapp->configurationCallback(sDefaultConfig);
 
@@ -321,8 +326,11 @@ bool NvAppBase::showDialog(const char* title, const char *contents, bool exitApp
         "showAlert", "(Ljava/lang/String;Ljava/lang/String;Z)V");
     EXCEPTION_RETURN(app->appThreadEnv);
 
-    app->appThreadEnv->CallVoidMethod(app->appThreadThis, showToastAlert, jniTitle, jniContents, exitApp);
-    EXCEPTION_RETURN(app->appThreadEnv);
+    if (exitApp)
+    {
+        app->appThreadEnv->CallVoidMethod(app->appThreadThis, showToastAlert, jniTitle, jniContents, exitApp);
+        EXCEPTION_RETURN(app->appThreadEnv);
+    }
 
     return true;
 }

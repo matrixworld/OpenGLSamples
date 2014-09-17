@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvGLAppContext.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -55,9 +55,9 @@ struct NvEGLConfiguration {
     NvEGLConfiguration(const NvGfxAPIVersion& _apiVer = NvGfxAPIVersionES2(),
         uint32_t r = 8, uint32_t g = 8, 
         uint32_t b = 8, uint32_t a = 8,
-        uint32_t d = 24, uint32_t s = 0) : apiVer(_apiVer),
+        uint32_t d = 24, uint32_t s = 0, uint32_t msaa = 0) : apiVer(_apiVer),
     redBits(r), greenBits(g), blueBits(b), alphaBits(a),
-        depthBits(d), stencilBits(s) {}
+        depthBits(d), stencilBits(s), msaaSamples(msaa) {}
 
     NvGfxAPIVersion apiVer; ///< API and version
     uint32_t redBits; ///< red color channel depth in bits
@@ -66,6 +66,7 @@ struct NvEGLConfiguration {
     uint32_t alphaBits; ///< alpha color channel depth in bits
     uint32_t depthBits; ///< depth buffer depth in bits
     uint32_t stencilBits; ///< stencil buffer depth in bits
+    uint32_t msaaSamples; ///< MSAA samples
 };
 
 /// GPU platform category (high-level).

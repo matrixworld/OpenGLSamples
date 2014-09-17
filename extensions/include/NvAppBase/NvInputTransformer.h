@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvInputTransformer.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -111,6 +111,13 @@ public:
     const nv::matrix4f& getScaleMat(NvCameraXformType::Enum xform = NvCameraXformType::MAIN)
     { return m_xforms[xform].m_scaleMat; }
     ///@}
+
+    /// Query to determine if the current configuration of the controls is causing animation
+    /// Can be used in on-demand redraw cases to determine whether continuous redraw is likely
+    /// to be required.
+    /// \return True if the current configuration should cause animation, false if the transforms
+    /// are not changing
+    bool isAnimating();
 
     /// Get the current rotation vector.
     /// \param[in] xform the index of the transform to be referenced.  For all

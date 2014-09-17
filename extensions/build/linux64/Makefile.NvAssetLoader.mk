@@ -4,12 +4,14 @@ ProjectName = NvAssetLoader
 NvAssetLoader_cppfiles   += ./../../src/NvAssetLoader/NvAssetLoader.cpp
 
 NvAssetLoader_cpp_debug_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.debug.P, $(NvAssetLoader_cppfiles)))))
+NvAssetLoader_cc_debug_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.debug.P, $(NvAssetLoader_ccfiles)))))
 NvAssetLoader_c_debug_dep      = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.debug.P, $(NvAssetLoader_cfiles)))))
-NvAssetLoader_debug_dep      = $(NvAssetLoader_cpp_debug_dep) $(NvAssetLoader_c_debug_dep)
+NvAssetLoader_debug_dep      = $(NvAssetLoader_cpp_debug_dep) $(NvAssetLoader_cc_debug_dep) $(NvAssetLoader_c_debug_dep)
 -include $(NvAssetLoader_debug_dep)
 NvAssetLoader_cpp_release_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.release.P, $(NvAssetLoader_cppfiles)))))
+NvAssetLoader_cc_release_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.release.P, $(NvAssetLoader_ccfiles)))))
 NvAssetLoader_c_release_dep      = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.release.P, $(NvAssetLoader_cfiles)))))
-NvAssetLoader_release_dep      = $(NvAssetLoader_cpp_release_dep) $(NvAssetLoader_c_release_dep)
+NvAssetLoader_release_dep      = $(NvAssetLoader_cpp_release_dep) $(NvAssetLoader_cc_release_dep) $(NvAssetLoader_c_release_dep)
 -include $(NvAssetLoader_release_dep)
 NvAssetLoader_debug_hpaths    := 
 NvAssetLoader_debug_hpaths    += ./../../src/NvAssetLoader
@@ -30,10 +32,11 @@ NvAssetLoader_debug_common_cflags    += $(addprefix -D, $(NvAssetLoader_debug_de
 NvAssetLoader_debug_common_cflags    += $(addprefix -I, $(NvAssetLoader_debug_hpaths))
 NvAssetLoader_debug_common_cflags  += -m64
 NvAssetLoader_debug_cflags	:= $(NvAssetLoader_debug_common_cflags)
-NvAssetLoader_debug_cflags  += -malign-double -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-reorder
+NvAssetLoader_debug_cflags  += -malign-double -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 NvAssetLoader_debug_cflags  += -g
 NvAssetLoader_debug_cppflags	:= $(NvAssetLoader_debug_common_cflags)
-NvAssetLoader_debug_cppflags  += -malign-double -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-reorder
+NvAssetLoader_debug_cppflags  += -malign-double -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+NvAssetLoader_debug_cppflags  += -Wno-reorder
 NvAssetLoader_debug_cppflags  += -g
 NvAssetLoader_debug_lflags    := $(NvAssetLoader_custom_lflags)
 NvAssetLoader_debug_lflags    += $(addprefix -L, $(NvAssetLoader_debug_lpaths))
@@ -42,14 +45,15 @@ NvAssetLoader_debug_lflags  += -m64
 NvAssetLoader_debug_lflags  += -m64
 NvAssetLoader_debug_objsdir  = $(OBJS_DIR)/NvAssetLoader_debug
 NvAssetLoader_debug_cpp_o    = $(addprefix $(NvAssetLoader_debug_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.o, $(NvAssetLoader_cppfiles)))))
+NvAssetLoader_debug_cc_o    = $(addprefix $(NvAssetLoader_debug_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.o, $(NvAssetLoader_ccfiles)))))
 NvAssetLoader_debug_c_o      = $(addprefix $(NvAssetLoader_debug_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.o, $(NvAssetLoader_cfiles)))))
-NvAssetLoader_debug_obj      = $(NvAssetLoader_debug_cpp_o) $(NvAssetLoader_debug_c_o)
+NvAssetLoader_debug_obj      = $(NvAssetLoader_debug_cpp_o) $(NvAssetLoader_debug_cc_o) $(NvAssetLoader_debug_c_o)
 NvAssetLoader_debug_bin      := ./../../lib/linux64/libNvAssetLoaderD.a
 
 clean_NvAssetLoader_debug: 
-	@$(ECHO) clean NvAssetLoader debug
-	@$(RMDIR) $(NvAssetLoader_debug_objsdir)
-	@$(RMDIR) $(NvAssetLoader_debug_bin)
+	$(SILENT_FLAG)$(ECHO) clean NvAssetLoader debug
+	$(SILENT_FLAG)$(RMDIR) $(NvAssetLoader_debug_objsdir)
+	$(SILENT_FLAG)$(RMDIR) $(NvAssetLoader_debug_bin)
 
 build_NvAssetLoader_debug: postbuild_NvAssetLoader_debug
 postbuild_NvAssetLoader_debug: mainbuild_NvAssetLoader_debug
@@ -57,27 +61,37 @@ mainbuild_NvAssetLoader_debug: prebuild_NvAssetLoader_debug $(NvAssetLoader_debu
 prebuild_NvAssetLoader_debug:
 
 $(NvAssetLoader_debug_bin): $(NvAssetLoader_debug_obj) 
-	@mkdir -p `dirname ./../../lib/linux64/libNvAssetLoaderD.a`
-	@$(AR) rcs $(NvAssetLoader_debug_bin) $(NvAssetLoader_debug_obj)
-	@$(ECHO) building $@ complete!
+	$(SILENT_FLAG)mkdir -p `dirname ./../../lib/linux64/libNvAssetLoaderD.a`
+	$(SILENT_FLAG)$(AR) rcs $(NvAssetLoader_debug_bin) $(NvAssetLoader_debug_obj)
+	$(SILENT_FLAG)$(ECHO) building $@ complete!
 
 NvAssetLoader_debug_DEPDIR = $(dir $(@))/$(*F)
 $(NvAssetLoader_debug_cpp_o): $(NvAssetLoader_debug_objsdir)/%.o:
-	@$(ECHO) NvAssetLoader: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cppfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CXX) $(NvAssetLoader_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cppfiles)) -o $@
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cppfiles))))))
-	@cp $(NvAssetLoader_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cppfiles))))).debug.P; \
+	$(SILENT_FLAG)$(ECHO) NvAssetLoader: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cppfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvAssetLoader_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cppfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cppfiles))))))
+	$(SILENT_FLAG)cp $(NvAssetLoader_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAssetLoader_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cppfiles))))).debug.P; \
 	  rm -f $(NvAssetLoader_debug_DEPDIR).d
 
+$(NvAssetLoader_debug_cc_o): $(NvAssetLoader_debug_objsdir)/%.o:
+	$(SILENT_FLAG)$(ECHO) NvAssetLoader: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_ccfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvAssetLoader_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_ccfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_ccfiles))))))
+	$(SILENT_FLAG)cp $(NvAssetLoader_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_ccfiles))))).debug.P; \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAssetLoader_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_ccfiles))))).debug.P; \
+	  rm -f $(NvAssetLoader_debug_DEPDIR).d
+
 $(NvAssetLoader_debug_c_o): $(NvAssetLoader_debug_objsdir)/%.o:
-	@$(ECHO) NvAssetLoader: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CC) $(NvAssetLoader_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cfiles)) -o $@ 
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cfiles))))))
-	@cp $(NvAssetLoader_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cfiles))))).debug.P; \
+	$(SILENT_FLAG)$(ECHO) NvAssetLoader: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CC) $(NvAssetLoader_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cfiles)) -o $@ 
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cfiles))))))
+	$(SILENT_FLAG)cp $(NvAssetLoader_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAssetLoader_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_debug_objsdir),, $@))), $(NvAssetLoader_cfiles))))).debug.P; \
 	  rm -f $(NvAssetLoader_debug_DEPDIR).d
@@ -101,10 +115,11 @@ NvAssetLoader_release_common_cflags    += $(addprefix -D, $(NvAssetLoader_releas
 NvAssetLoader_release_common_cflags    += $(addprefix -I, $(NvAssetLoader_release_hpaths))
 NvAssetLoader_release_common_cflags  += -m64
 NvAssetLoader_release_cflags	:= $(NvAssetLoader_release_common_cflags)
-NvAssetLoader_release_cflags  += -malign-double -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-reorder
+NvAssetLoader_release_cflags  += -malign-double -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 NvAssetLoader_release_cflags  += -O2
 NvAssetLoader_release_cppflags	:= $(NvAssetLoader_release_common_cflags)
-NvAssetLoader_release_cppflags  += -malign-double -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-reorder
+NvAssetLoader_release_cppflags  += -malign-double -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+NvAssetLoader_release_cppflags  += -Wno-reorder
 NvAssetLoader_release_cppflags  += -O2
 NvAssetLoader_release_lflags    := $(NvAssetLoader_custom_lflags)
 NvAssetLoader_release_lflags    += $(addprefix -L, $(NvAssetLoader_release_lpaths))
@@ -113,14 +128,15 @@ NvAssetLoader_release_lflags  += -m64
 NvAssetLoader_release_lflags  += -m64
 NvAssetLoader_release_objsdir  = $(OBJS_DIR)/NvAssetLoader_release
 NvAssetLoader_release_cpp_o    = $(addprefix $(NvAssetLoader_release_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.o, $(NvAssetLoader_cppfiles)))))
+NvAssetLoader_release_cc_o    = $(addprefix $(NvAssetLoader_release_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.o, $(NvAssetLoader_ccfiles)))))
 NvAssetLoader_release_c_o      = $(addprefix $(NvAssetLoader_release_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.o, $(NvAssetLoader_cfiles)))))
-NvAssetLoader_release_obj      = $(NvAssetLoader_release_cpp_o) $(NvAssetLoader_release_c_o)
+NvAssetLoader_release_obj      = $(NvAssetLoader_release_cpp_o) $(NvAssetLoader_release_cc_o) $(NvAssetLoader_release_c_o)
 NvAssetLoader_release_bin      := ./../../lib/linux64/libNvAssetLoader.a
 
 clean_NvAssetLoader_release: 
-	@$(ECHO) clean NvAssetLoader release
-	@$(RMDIR) $(NvAssetLoader_release_objsdir)
-	@$(RMDIR) $(NvAssetLoader_release_bin)
+	$(SILENT_FLAG)$(ECHO) clean NvAssetLoader release
+	$(SILENT_FLAG)$(RMDIR) $(NvAssetLoader_release_objsdir)
+	$(SILENT_FLAG)$(RMDIR) $(NvAssetLoader_release_bin)
 
 build_NvAssetLoader_release: postbuild_NvAssetLoader_release
 postbuild_NvAssetLoader_release: mainbuild_NvAssetLoader_release
@@ -128,30 +144,40 @@ mainbuild_NvAssetLoader_release: prebuild_NvAssetLoader_release $(NvAssetLoader_
 prebuild_NvAssetLoader_release:
 
 $(NvAssetLoader_release_bin): $(NvAssetLoader_release_obj) 
-	@mkdir -p `dirname ./../../lib/linux64/libNvAssetLoader.a`
-	@$(AR) rcs $(NvAssetLoader_release_bin) $(NvAssetLoader_release_obj)
-	@$(ECHO) building $@ complete!
+	$(SILENT_FLAG)mkdir -p `dirname ./../../lib/linux64/libNvAssetLoader.a`
+	$(SILENT_FLAG)$(AR) rcs $(NvAssetLoader_release_bin) $(NvAssetLoader_release_obj)
+	$(SILENT_FLAG)$(ECHO) building $@ complete!
 
 NvAssetLoader_release_DEPDIR = $(dir $(@))/$(*F)
 $(NvAssetLoader_release_cpp_o): $(NvAssetLoader_release_objsdir)/%.o:
-	@$(ECHO) NvAssetLoader: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cppfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CXX) $(NvAssetLoader_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cppfiles)) -o $@
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cppfiles))))))
-	@cp $(NvAssetLoader_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cppfiles))))).release.P; \
+	$(SILENT_FLAG)$(ECHO) NvAssetLoader: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cppfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvAssetLoader_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cppfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cppfiles))))))
+	$(SILENT_FLAG)cp $(NvAssetLoader_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAssetLoader_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cppfiles))))).release.P; \
 	  rm -f $(NvAssetLoader_release_DEPDIR).d
 
+$(NvAssetLoader_release_cc_o): $(NvAssetLoader_release_objsdir)/%.o:
+	$(SILENT_FLAG)$(ECHO) NvAssetLoader: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_ccfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvAssetLoader_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_ccfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_ccfiles))))))
+	$(SILENT_FLAG)cp $(NvAssetLoader_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_ccfiles))))).release.P; \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAssetLoader_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_ccfiles))))).release.P; \
+	  rm -f $(NvAssetLoader_release_DEPDIR).d
+
 $(NvAssetLoader_release_c_o): $(NvAssetLoader_release_objsdir)/%.o:
-	@$(ECHO) NvAssetLoader: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CC) $(NvAssetLoader_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cfiles)) -o $@ 
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cfiles))))))
-	@cp $(NvAssetLoader_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cfiles))))).release.P; \
+	$(SILENT_FLAG)$(ECHO) NvAssetLoader: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CC) $(NvAssetLoader_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cfiles)) -o $@ 
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cfiles))))))
+	$(SILENT_FLAG)cp $(NvAssetLoader_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAssetLoader_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAssetLoader_release_objsdir),, $@))), $(NvAssetLoader_cfiles))))).release.P; \
 	  rm -f $(NvAssetLoader_release_DEPDIR).d
 
 clean_NvAssetLoader:  clean_NvAssetLoader_debug clean_NvAssetLoader_release
-	@rm -rf $(DEPSDIR)
+	$(SILENT_FLAG)rm -rf $(DEPSDIR)

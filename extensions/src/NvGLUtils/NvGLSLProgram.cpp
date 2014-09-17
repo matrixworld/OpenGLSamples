@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvGLUtils/NvGLSLProgram.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -37,6 +37,7 @@
 #include <string>
 
 bool NvGLSLProgram::ms_logAllMissing = false;
+const char* NvGLSLProgram::ms_shaderHeader = NULL;
 
 NvGLSLProgram::NvGLSLProgram()
     : m_program(0), m_strict(false)
@@ -73,6 +74,19 @@ NvGLSLProgram* NvGLSLProgram::createFromStrings(const char* vertSrc, const char*
     }
 }
 
+NvGLSLProgram* NvGLSLProgram::createFromStrings(const char** vertSrcArray, int32_t vertSrcCount, 
+    const char** fragSrcArray, int32_t fragSrcCount, bool strict)
+{
+    NvGLSLProgram* prog = new NvGLSLProgram;
+
+    if (prog->setSourceFromStrings(vertSrcArray, vertSrcCount, fragSrcArray, fragSrcCount, strict)) {
+        return prog;
+    } else {
+        delete prog;
+        return NULL;
+    }
+}
+
 bool NvGLSLProgram::setSourceFromFiles(const char* vertFilename, const char* fragFilename, bool strict)
 {
     int32_t len;
@@ -102,6 +116,21 @@ bool NvGLSLProgram::setSourceFromStrings(const char* vertSrc, const char* fragSr
     m_strict = strict;
 
     m_program = compileProgram(vertSrc, fragSrc);
+
+    return m_program != 0;
+}
+
+bool NvGLSLProgram::setSourceFromStrings(const char** vertSrcArray, int32_t vertSrcCount, 
+    const char** fragSrcArray, int32_t fragSrcCount, bool strict)
+{
+    if (m_program) {
+        glDeleteProgram(m_program);
+        m_program = 0;
+    }
+
+    m_strict = strict;
+
+    m_program = compileProgram(vertSrcArray, vertSrcCount, fragSrcArray, fragSrcCount);
 
     return m_program != 0;
 }
@@ -165,8 +194,20 @@ GLuint NvGLSLProgram::compileProgram(const char *vsource, const char *fsource)
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    glShaderSource(vertexShader, 1, &vsource, 0);
-    glShaderSource(fragmentShader, 1, &fsource, 0);
+    const char* sourceItems[2];
+    int sourceCount = 0;
+    if (ms_shaderHeader)
+        sourceItems[sourceCount++] = ms_shaderHeader;
+    sourceItems[sourceCount++] = vsource;
+
+    glShaderSource(vertexShader, sourceCount, sourceItems, 0);
+
+    sourceCount = 0;
+    if (ms_shaderHeader)
+        sourceItems[sourceCount++] = ms_shaderHeader;
+    sourceItems[sourceCount++] = fsource;
+
+    glShaderSource(fragmentShader, sourceCount, sourceItems, 0);
 
     glCompileShader(vertexShader);
     if (!checkCompileError(vertexShader, GL_VERTEX_SHADER))
@@ -210,6 +251,85 @@ GLuint NvGLSLProgram::compileProgram(const char *vsource, const char *fsource)
     return program;
 }
 
+GLuint NvGLSLProgram::compileProgram(
+        const char** vertSrcArray, int32_t vertSrcCount,
+        const char** fragSrcArray, int32_t fragSrcCount)
+{
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    {
+        const char** sourceItems = new const char*[vertSrcCount + 1];
+        int sourceCount = 0;
+        if (ms_shaderHeader)
+            sourceItems[sourceCount++] = ms_shaderHeader;
+
+        for (int i = 0; i < vertSrcCount; i++)
+            sourceItems[sourceCount++] = vertSrcArray[i];
+
+        glShaderSource(vertexShader, sourceCount, sourceItems, 0);
+
+        delete[] sourceItems;
+    }
+
+    {
+        const char** sourceItems = new const char*[fragSrcCount + 1];
+        int sourceCount = 0;
+        if (ms_shaderHeader)
+            sourceItems[sourceCount++] = ms_shaderHeader;
+
+        for (int i = 0; i < fragSrcCount; i++)
+            sourceItems[sourceCount++] = fragSrcArray[i];
+
+        glShaderSource(fragmentShader, sourceCount, sourceItems, 0);
+
+        delete[] sourceItems;
+    }
+
+    glCompileShader(vertexShader);
+    if (!checkCompileError(vertexShader, GL_VERTEX_SHADER))
+        return 0;
+
+    glCompileShader(fragmentShader);
+    if (!checkCompileError(fragmentShader, GL_FRAGMENT_SHADER))
+        return 0;
+
+    GLuint program = glCreateProgram();
+
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+
+    // can be deleted since the program will keep a reference
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    glLinkProgram(program);
+
+    // check if program linked
+    GLint success = 0;
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+
+    if (!success)
+    {
+        GLint bufLength = 0;
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufLength);
+        if (bufLength) {
+            char* buf = new char[bufLength];
+            if (buf) {
+                glGetProgramInfoLog(program, bufLength, NULL, buf);
+                LOGI("Could not link program:\n%s\n", buf);
+                delete [] buf;
+            }
+        }
+        glDeleteProgram(program);
+        program = 0;
+    }
+
+    return program;
+}
+
+
+
 GLuint NvGLSLProgram::compileProgram(ShaderSourceItem* src, int32_t count)
 {
     GLuint program = glCreateProgram();
@@ -217,7 +337,14 @@ GLuint NvGLSLProgram::compileProgram(ShaderSourceItem* src, int32_t count)
     int32_t i;
     for (i = 0; i < count; i++) {
         GLuint shader = glCreateShader(src[i].type);
-        glShaderSource(shader, 1, &(src[i].src), 0);
+
+        const char* sourceItems[2];
+        int sourceCount = 0;
+        if (ms_shaderHeader)
+            sourceItems[sourceCount++] = ms_shaderHeader;
+        sourceItems[sourceCount++] = (src[i].src);
+
+        glShaderSource(shader, sourceCount, sourceItems, 0);
         glCompileShader(shader);
         if (!checkCompileError(shader, src[i].type))
             return 0;
@@ -331,6 +458,23 @@ void NvGLSLProgram::bindTexture2D(GLint index, int32_t unit, GLuint tex)
     glUniform1i(index, unit);
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, tex);
+}
+
+void NvGLSLProgram::bindTextureRect(const char *name, int32_t unit, GLuint tex)
+{
+    GLint loc = getUniformLocation(name, false);
+    if (loc >= 0) {
+        glUniform1i(loc, unit);
+        glActiveTexture(GL_TEXTURE0 + unit);
+        glBindTexture(0x84F5/*GL_TEXTURE_RECT*/, tex);
+    }
+}
+
+void NvGLSLProgram::bindTextureRect(GLint index, int32_t unit, GLuint tex)
+{
+    glUniform1i(index, unit);
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(0x84F5/*GL_TEXTURE_RECT*/, tex);
 }
 
 void NvGLSLProgram::bindTextureArray(const char *name, int32_t unit, GLuint tex)

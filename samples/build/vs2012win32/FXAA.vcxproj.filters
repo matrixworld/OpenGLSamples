@@ -5,14 +5,53 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\FXAA\FXAA.cpp">
+		<ClCompile Include="..\..\es3-kepler\FXAA\FXAA.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\FXAA\FXAA.h">
+		<ClInclude Include="..\..\es3-kepler\FXAA\FXAA.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\FXAA\FXAA3_11.h">
+		<ClInclude Include="..\..\es3-kepler\FXAA\FXAA3_11.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\Blit.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\DrawLine.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Default.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Extreme_Quality.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Fastest.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_High_Quality.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\Object.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\Blit.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\DrawLine.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\Object.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvPlatformContext.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -97,6 +97,7 @@ public:
     float m_x; ///< x value in pixel-space
     float m_y; ///< y value in pixel-space
     uint32_t m_id; ///< Unique ID for tracking multiple touches
+    NvInputDeviceType::Enum m_device; ///< Device type for this pointer event
 };
 
 /// Input handling callback interfaces.
@@ -116,7 +117,8 @@ public:
     virtual bool pointerInput(NvInputDeviceType::Enum device,
                                 NvPointerActionType::Enum action, 
                                 uint32_t modifiers, 
-                                int32_t count, NvPointerEvent* points) = 0;
+                                int32_t count, NvPointerEvent* points,
+                                int64_t timestamp=0) = 0;
 
     /// Key input event
     /// Called when a key is pressed, released or held
@@ -141,6 +143,16 @@ public:
     /// \return true if the recipient handled the event, false if the recipient wishes
     /// the caller to handle the event
     virtual bool gamepadChanged(uint32_t changedPadFlags) = 0;
+};
+
+
+/// Redraw frequency mode.
+struct NvRedrawMode {
+    enum Enum {
+        UNBOUNDED, ///< Call the rendering callback as fast as looping will allow - might block in swaps, etc
+        VSYNC, ///< Call the rendering callback at the rate of vsync or composition; avoids queuing frames
+        ON_DEMAND, ///< Render only when the app requests
+    };
 };
 
 /// Basic platform functionality interface.
@@ -197,6 +209,23 @@ public:
     /// Returns whether the application's window has resized since the last call to this query
     /// \return true if the window has been resized and false if not
     virtual bool hasWindowResized() = 0;
+
+    /// Redraw mode query
+    /// Returns the current redraw mode.  Depending on support, this may NOT match the requested mode
+    /// \return the currently implemented mode
+    virtual NvRedrawMode::Enum getRedrawMode() = 0;
+
+    /// Set redraw mode query
+    /// Attempts to set the current redraw mode.  Depending on support, the requested mode may NOT be
+    /// matched.  Call getRedrawMode to confirm.
+    /// \param[in] mode declares the desired mode
+    virtual void setRedrawMode(NvRedrawMode::Enum mode) = 0;
+
+    /// Request redraw
+    /// When the system is in NvRedrawMode::ON_DEMAND, this function requests a redraw be queued.
+    /// The redraw will not be done immediately in this call, so the call is safe to make inside of
+    /// the application's rendering function.  In any other redraw mode, this function is a NO-OP.
+    virtual void requestRedraw() = 0;
 
     /// Gamepad access.
     /// Returns the gamepad class instance if available

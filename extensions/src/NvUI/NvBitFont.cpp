@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvUI/NvBitFont.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -61,6 +61,13 @@
 #include <string.h>
 #include <string>
 
+struct BFVert
+{
+    float pos[2]; // TBD where we add Z support. !!!!TBD
+    float uv[2];
+    uint32_t color; // packed 4 byte color.  ABGR with A << 24...
+};
+
 static int32_t TestPrintGLError(const char* str)
 {
     int32_t err;
@@ -115,6 +122,49 @@ public:
 };
 
 
+class NvBFProgram : public NvGLSLProgram
+{
+public:
+    GLint fontProgLocMat;
+    GLint fontProgLocTex;
+    GLint fontProgAttribPos, fontProgAttribCol, fontProgAttribTex;
+    // I can subclass, but for now just 'share'.
+    GLint fontProgLocScale; // inv w+h vec2
+    GLint fontProgLocOutlineColor;
+
+    void cacheLocations(void)
+    {
+        enable();
+    
+        // grab new uniform locations.
+        fontProgLocMat = getUniformLocation("pixelToClipMat");
+        fontProgLocTex = getUniformLocation("fontTex");
+        fontProgLocScale = getUniformLocation("fontScale");
+        fontProgLocOutlineColor = getUniformLocation("outlineColor");
+
+        fontProgAttribPos = getAttribLocation("pos_attr");
+        fontProgAttribCol = getAttribLocation("col_attr");
+        fontProgAttribTex = getAttribLocation("tex_attr");
+
+        // and bind the uniform for the sampler
+        // as it never changes.
+        glUniform1i(fontProgLocTex, 0);
+
+        disable();
+    };
+
+    static NvBFProgram* createFromStrings(const char* vertSrc, const char* fragSrc, bool strict = false)
+    {
+        NvBFProgram* prog = new NvBFProgram;
+        if (prog->setSourceFromStrings(vertSrc, fragSrc, strict)) {
+            prog->cacheLocations();
+            return prog;
+        } else {
+            delete prog;
+            return NULL;
+        }
+    }
+};
 
 //========================================================================
 // static vars
@@ -132,12 +182,9 @@ static float s_bfShadowMultiplier = 0.40f;
 static NvBitFont *bitFontLL = NULL;
 static uint8_t bitFontID = 1; // NOT ZERO, start at 1 so zero is 'invalid'...
 
-// for ES2, always vbos, but we need to track shader program...
-static NvGLSLProgram *fontProg = 0;
-static GLboolean fontProgAllocInternal = 1;
-static GLint fontProgLocMat;
-static GLint fontProgLocTex;
-static GLint fontProgAttribPos, fontProgAttribCol, fontProgAttribTex;
+// track shader programs...
+static NvBFProgram *fontProg = 0;
+static NvBFProgram *fontOutlineProg = 0;
 
 //========================================================================
 static float dispW = 0, dispH = 0;
@@ -149,6 +196,7 @@ static float dispRotation = 0;
 static GLuint lastColorArray = 0;
 static GLuint lastFontTexture = 0;
 static uint8_t lastTextMode = 111;
+static NvBFProgram *lastFontProgram = NULL;
 
 //========================================================================
 //static float lastTextHigh = 0;
@@ -192,6 +240,33 @@ const static char s_fontFragShader[] =
 "    gl_FragColor = col_var * vec4(1.0, 1.0, 1.0, alpha);\n"
 "}\n";
 
+// this seems the most efficient way to outline an existing glyph.
+// one key thing is it samples 'x' and not '+', helping sharp corners.
+const static char s_fontOutlineFragShader[] =
+"#version 100\n"
+"precision mediump float;\n"
+"uniform sampler2D fontTex;\n"
+"uniform vec2 texelScale;\n"
+"uniform vec4 outlineColor;\n"
+"varying vec4 col_var;\n"
+"varying vec2 tex_var;\n"
+"void main() {\n"
+"    float alpha = texture2D(fontTex, tex_var).a;\n"
+"    vec4 baseCol = col_var;\n"
+"    baseCol.a = alpha;\n"
+"    float left = tex_var.x - texelScale.x;\n"
+"    float right = tex_var.x + texelScale.x;\n"
+"    float top = tex_var.y - texelScale.y;\n"
+"    float bottom = tex_var.y + texelScale.y;\n"
+"    float a1 = texture2D(fontTex, vec2(left, top)).a;\n"
+"    float a2 = texture2D(fontTex, vec2(right, top)).a;\n"
+"    float a3 = texture2D(fontTex, vec2(left, bottom)).a;\n"
+"    float a4 = texture2D(fontTex, vec2(right, bottom)).a;\n"
+"    vec4 lineCol = outlineColor;\n"
+"    lineCol.a = clamp(a1+a2+a3+a4+alpha, 0.0, 1.0);\n"
+"    gl_FragColor = mix(lineCol, baseCol, alpha);\n"
+"}\n";
+
 
 //========================================================================
 //========================================================================
@@ -199,7 +274,7 @@ NvBitFont::NvBitFont()
 : m_id(0)
 , m_alpha(false)
 , m_rgb(false)
-, m_tex(NULL)
+, m_tex(0)
 , m_afont(NULL)
 , m_afontBold(NULL)
 , m_canonPtSize(10)
@@ -278,24 +353,6 @@ uint8_t NvBFGetFontID(const char* filename)
     }
     
     return 0;
-}
-
-
-static void NvBFFontProgramPrecache(void)
-{
-    fontProg->enable();
-    
-    // grab new uniform locations.
-    fontProgLocMat = fontProg->getUniformLocation("pixelToClipMat");
-    fontProgLocTex = fontProg->getUniformLocation("fontTex");
-
-    fontProgAttribPos = fontProg->getAttribLocation("pos_attr");
-    fontProgAttribCol = fontProg->getAttribLocation("col_attr");
-    fontProgAttribTex = fontProg->getAttribLocation("tex_attr");
-
-    // and bind the uniform for the sampler
-    // as it never changes.
-    glUniform1i(fontProgLocTex, 0);
 }
 
 
@@ -378,17 +435,19 @@ int32_t NvBFInitialize(uint8_t count, const char* filename[][2])
     
     if (fontProg == 0)
     { // then not one set already, load one...
-    // this loads from a file
-        fontProg = NvGLSLProgram::createFromStrings(s_fontVertShader, s_fontFragShader);
-        //fontProg = nv_load_program_from_strings(s_fontVertShader, s_fontFragShader);  
-        if (0==fontProg ) //|| 0==fontProg->getProgram())
+        fontProg = NvBFProgram::createFromStrings(s_fontVertShader, s_fontFragShader);
+        if (0==fontProg)
         {
             ERROR_LOG("!!> NvBFInitialize failure: couldn't load shader program...\n");
             return(1);
         }
 
-        fontProgAllocInternal = 1;
-        NvBFFontProgramPrecache();
+        fontOutlineProg = NvBFProgram::createFromStrings(s_fontVertShader, s_fontOutlineFragShader);
+        if (0==fontOutlineProg)
+        {
+            ERROR_LOG("!!> NvBFInitialize failure: couldn't load outlining shader program...\n");
+            //return(1);
+        }
 
         // The following entries are const
         // so we set them up now and never change
@@ -553,6 +612,8 @@ void NvBFCleanup()
     // free the shader
         delete fontProg;
         fontProg = 0;
+        delete fontOutlineProg;
+        fontOutlineProg = 0;
     // NvFree each font in the fontLL
         NvBitFont *bitfont = bitFontLL, *currFont;
         while (bitfont)
@@ -583,13 +644,6 @@ void NvBFCleanup()
         // for safety, we're going to clear _everything_ here to init's
         bitFontLL = NULL;
         bitFontID = 1; // NOT ZERO, start at 1 so zero is 'invalid'...
-        fontProg = 0;
-        fontProgAllocInternal = 1;
-        fontProgLocMat = 0;
-        fontProgLocTex = 0;
-        fontProgAttribPos = 0;
-        fontProgAttribCol = 0;
-        fontProgAttribTex = 0;
         dispW = 0;
         dispH = 0;
         dispAspect = 0;
@@ -655,7 +709,7 @@ NvBFText::NvBFText()
 , m_drawnChars(-1) // no clamping.
 
 , m_data(NULL)
-, m_vbo(NULL)
+, m_vbo(0)
     
 , m_numLines(0)
 , m_calcLinesMax(0)
@@ -691,6 +745,9 @@ NvBFText::NvBFText()
 , m_shadowDir(0)
 , m_shadowColor(NV_PC_PREDEF_BLACK)
     
+, m_outline(false)
+, m_outlineColor(NV_PC_PREDEF_BLACK)
+
 , m_pixelsWide(0)
 , m_pixelsHigh(0)
 {
@@ -712,7 +769,7 @@ NvBFText::~NvBFText()
 
     if (m_vbo)
         glDeleteBuffers(1, &(m_vbo));
-    m_vbo = NULL;
+    m_vbo = 0;
 
     if (m_string)
         free(m_string);
@@ -757,6 +814,18 @@ void NvBFText::SetShadow(char dir, NvPackedColor color)
     m_cached = 0;
 }
 
+
+//========================================================================
+//========================================================================
+void NvBFText::SetOutline(bool outline, NvPackedColor color)
+{
+    if (m_outline==outline && NV_PC_EQUAL(m_outlineColor, color))
+        return; // no change.
+    m_outline = outline;
+    m_outlineColor = color;
+    // flag we need to recache this bftext
+    m_cached = 0;
+}
 
 //========================================================================
 //========================================================================
@@ -1009,9 +1078,9 @@ void NvBFText::AdjustGlyphsForAlignment()
 
 
 static inline void AddGlyphVertex(BFVert **vp, // explicit we're modding
-                                  float x, float y,
-                                  float uvx, float uvy,
-                                  NvPackedColor color )
+                            float x, float y,
+                            float uvx, float uvy,
+                            NvPackedColor color )
 {
     (*vp)->pos[0] = x;
     (*vp)->pos[1] = y;
@@ -1023,13 +1092,10 @@ static inline void AddGlyphVertex(BFVert **vp, // explicit we're modding
 
 //========================================================================
 //========================================================================
-static void AddOutputGlyph(
-                            const AFontChar &fc,
-                            const AFont *afont,
+static void AddOutputGlyph( const AFontChar &fc, const AFont *afont,
+                            bool outline,
                             BFVert **vp, // so explicit we're modding it!
-                            float *left,
-                            float t,
-                            float b,
+                            float *left, float t, float b,
                             float hsizepertex,
                             NvPackedColor color )
 {
@@ -1048,11 +1114,26 @@ static void AddOutputGlyph(
     float pH = fc.m_height * hsizepertex;
     float pW = fc.m_width * hsizepertex;
     *left += (fc.m_xAdvance * hsizepertex);
+//    *left += ((fc.m_xAdvance + afont->m_fontInfo.m_outline) * hsizepertex);
     // must invert Y on uv as we flipped texture coming in.
-    float tx = fc.m_x / afont->m_charCommon.m_pageWidth;
-    float ty = fc.m_y / afont->m_charCommon.m_pageHeight;
-    float tw = fc.m_width / afont->m_charCommon.m_pageWidth;
-    float th = fc.m_height / afont->m_charCommon.m_pageHeight;
+    const float invW = afont->m_charCommon.m_pageWidthInv;
+    const float invH = afont->m_charCommon.m_pageHeightInv;
+    float tx = fc.m_x * invW ;
+    float ty = fc.m_y * invH;
+    float tw = fc.m_width * invW;
+    float th = fc.m_height * invH;
+
+    if (outline)
+    {
+        // trying a pixel expansion of src rect for outline.
+        tx -= invW;
+        ty -= invH;
+        tw += 2*invW;
+        th += 2*invH;
+        pW += 2*hsizepertex;
+        pH += 2*hsizepertex;
+    }
+
     float uvt = ty;
     float uvb = ty+th;
 
@@ -1131,10 +1212,9 @@ void NvBFText::RebuildCache(bool internalCall)
 {
     NvBftStyle::Enum bfs = NvBftStyle::NORMAL;
 
-    float vsize, hsize, hsizepertex, fullglyphwidth;
+    float vsize, hsizepertex, fullglyphwidth;
     float left, t, b;
-    //float l,r;
-    int32_t n,j;
+    int32_t n;
     BFVert *vp, *lastvp;
     GLuint vbmode = GL_STATIC_DRAW /*GL_DYNAMIC_DRAW*/;
     const NvBitFont *bitfont = m_font;
@@ -1163,9 +1243,8 @@ void NvBFText::RebuildCache(bool internalCall)
     currFont = bitfont->m_afont;
 
     // recalc size in terms of the screen res...
-    j = m_fontNum-1; // fontnum is 1-based, other stuff is 0-based
+    //j = m_fontNum-1; // fontnum is 1-based, other stuff is 0-based
     vsize = m_fontSize;// *(high/((dispAspect<1)?640.0f:480.0f)); // need the texel-factor for the texture at the end...
-    hsize = vsize;
     hsizepertex = vsize / bitfont->m_canonPtSize;
 
     // calc extra margin for wraps...
@@ -1330,10 +1409,10 @@ void NvBFText::RebuildCache(bool internalCall)
                             {
                                 float soff = ((float)m_shadowDir) * s_bfShadowMultiplier;
                                 float tmpleft = left+soff; // so we don't really change position.
-                                AddOutputGlyph( truncit->second, currFont, &vp, &tmpleft, t+soff, b+soff, hsizepertex, m_shadowColor );
+                                AddOutputGlyph( truncit->second, currFont, m_outline, &vp, &tmpleft, t+soff, b+soff, hsizepertex, m_shadowColor );
                                 m_stringCharsOut++; // update number of output chars.
                             }        
-                            AddOutputGlyph( truncit->second, currFont, &vp, &left, t, b, hsizepertex, color );
+                            AddOutputGlyph( truncit->second, currFont, m_outline, &vp, &left, t, b, hsizepertex, color );
                             m_stringCharsOut++; // update number of output chars.
                         }
                     
@@ -1360,10 +1439,10 @@ void NvBFText::RebuildCache(bool internalCall)
             {
                 float soff = ((float)m_shadowDir) * s_bfShadowMultiplier;
                 float tmpleft = left+soff; // so we don't really change position.
-                AddOutputGlyph( glyphit->second, currFont, &vp, &tmpleft, t+soff, b+soff, hsizepertex, m_shadowColor );
+                AddOutputGlyph( glyphit->second, currFont, m_outline, &vp, &tmpleft, t+soff, b+soff, hsizepertex, m_shadowColor );
                 m_stringCharsOut++; // update number of output chars.
             }        
-            AddOutputGlyph( glyphit->second, currFont, &vp, &left, t, b, hsizepertex, color );
+            AddOutputGlyph( glyphit->second, currFont, m_outline, &vp, &left, t, b, hsizepertex, color );
             m_stringCharsOut++; // update number of output chars.
         }
 
@@ -1448,6 +1527,13 @@ typedef struct
 
 static NvBFGLStateBlock gStateBlock;
 static bool gSaveRestoreState = false; // default was true, let's try false.
+
+//========================================================================
+void NvBFSetSaveRestoreState(bool enable)
+{
+    gSaveRestoreState = enable;
+}
+
 
 //========================================================================
 void NvBFSaveGLState()
@@ -1546,7 +1632,7 @@ void NvBFText::RenderPrep()
     if (gSaveRestoreState)
         NvBFSaveGLState();
 
-    fontProg->enable();
+    //lastFontProgram = NULL;
 
     // set up master rendering state
     glDisable(GL_CULL_FACE);
@@ -1576,26 +1662,28 @@ void NvBFText::RenderPrep()
 //========================================================================
 void NvBFText::RenderDone()
 {
-    if (gSaveRestoreState)
-        NvBFRestoreGLState();
-    else
-    {
-        glBindTexture( GL_TEXTURE_2D, 0 );
-        lastFontTexture = 0;
+    glBindTexture( GL_TEXTURE_2D, 0 );
+    lastFontTexture = 0;
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        // !!!!TBD TODO do we need to get this working again??
-        //nv_flush_tracked_attribs(); // clear any attrib binds.
-        glDisableVertexAttribArray(fontProgAttribPos);
-        glDisableVertexAttribArray(fontProgAttribTex);
-        glDisableVertexAttribArray(fontProgAttribCol);
-        
-        fontProg->disable();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
+    // !!!!TBD TODO do we need to get this working again??
+    //nv_flush_tracked_attribs(); // clear any attrib binds.
+    if (lastFontProgram)
+    {
+        glDisableVertexAttribArray(lastFontProgram->fontProgAttribPos);
+        glDisableVertexAttribArray(lastFontProgram->fontProgAttribTex);
+        glDisableVertexAttribArray(lastFontProgram->fontProgAttribCol);
+    
+        lastFontProgram->disable();
+        lastFontProgram = NULL;
     }
     
     SetMatrix(NULL); // explicitly clear each Done.
+
+    if (gSaveRestoreState)
+        NvBFRestoreGLState();
 }
 
 
@@ -1632,8 +1720,6 @@ void NvBFText::SetCursorPos(float h, float v)
 void NvBFText::SetMatrix(const GLfloat *mtx)
 {
     m_matrixOverride = mtx;
-    if (m_matrixOverride!=NULL)
-        glUniformMatrix4fv(fontProgLocMat, 1, GL_FALSE, m_matrixOverride);
 }
 
 
@@ -1693,6 +1779,18 @@ void NvBFText::Render()
     if (m_shadowDir)
         count *= 2; // so we draw char+shadow equally...
 
+    // we're past all early-exits here.
+    // let's make sure we have the right program.
+    NvBFProgram *prog = fontProg;
+    if (fontOutlineProg!=NULL && m_outline) prog = fontOutlineProg;
+    if (lastFontProgram != prog)
+    {
+        if (lastFontProgram)
+            lastFontProgram->disable();
+        prog->enable();
+        lastFontProgram = prog;
+    }
+
     // set up master rendering state
     {
         uint8_t *offset = NULL;
@@ -1700,16 +1798,16 @@ void NvBFText::Render()
             glGenBuffers(1, &(m_vbo)); // !!!!TBD TODO error handling.
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
-        glVertexAttribPointer(fontProgAttribPos, 2, GL_FLOAT, 0, sizeof(BFVert), (void *)offset);
-        glEnableVertexAttribArray(fontProgAttribPos);
+        glVertexAttribPointer(prog->fontProgAttribPos, 2, GL_FLOAT, 0, sizeof(BFVert), (void *)offset);
+        glEnableVertexAttribArray(prog->fontProgAttribPos);
         offset += sizeof(float) * 2; // jump ahead the two floats
 
-        glVertexAttribPointer(fontProgAttribTex, 2, GL_FLOAT, 0, sizeof(BFVert), (void *)offset); // !!!!TBD update this to use a var if we do 2 or 3 pos verts...
-        glEnableVertexAttribArray(fontProgAttribTex);
+        glVertexAttribPointer(prog->fontProgAttribTex, 2, GL_FLOAT, 0, sizeof(BFVert), (void *)offset); // !!!!TBD update this to use a var if we do 2 or 3 pos verts...
+        glEnableVertexAttribArray(prog->fontProgAttribTex);
         offset += sizeof(float) * 2; // jump ahead the two floats.
 
-        glVertexAttribPointer(fontProgAttribCol, 4, GL_UNSIGNED_BYTE, 1, sizeof(BFVert), (void *)offset); // !!!!TBD update this to use a var if we do 2 or 3 pos verts...
-        glEnableVertexAttribArray(fontProgAttribCol);
+        glVertexAttribPointer(prog->fontProgAttribCol, 4, GL_UNSIGNED_BYTE, 1, sizeof(BFVert), (void *)offset); // !!!!TBD update this to use a var if we do 2 or 3 pos verts...
+        glEnableVertexAttribArray(prog->fontProgAttribCol);
         offset += sizeof(GLuint);
     }
 
@@ -1726,7 +1824,9 @@ void NvBFText::Render()
 
     // we apply any global screen orientation/rotation so long as
     // caller hasn't specified their own transform matrix.
-    if (m_matrixOverride==NULL)
+    if (m_matrixOverride!=NULL)
+        glUniformMatrix4fv(prog->fontProgLocMat, 1, GL_FALSE, m_matrixOverride);
+    else
     {
         const float wNorm = s_pixelScaleFactorX;
         const float hNorm = s_pixelScaleFactorY;
@@ -1764,7 +1864,7 @@ void NvBFText::Render()
         }
 
         // upload our transform matrix.
-        glUniformMatrix4fv(fontProgLocMat, 1, GL_FALSE, &(s_pixelToClipMatrix[0][0]));
+        glUniformMatrix4fv(prog->fontProgLocMat, 1, GL_FALSE, &(s_pixelToClipMatrix[0][0]));
     }
 
     // bind texture... now with simplistic state caching
@@ -1772,6 +1872,17 @@ void NvBFText::Render()
     {
         glBindTexture( GL_TEXTURE_2D, m_font->m_tex );
         lastFontTexture = m_font->m_tex;
+
+        if (prog->fontProgLocScale>=0)
+            glUniform2f(prog->fontProgLocScale,
+                        1.0f/m_font->m_afont->m_charCommon.m_pageWidth,
+                        1.0f/m_font->m_afont->m_charCommon.m_pageHeight);
+        if (prog->fontProgLocOutlineColor>=0)
+            glUniform4f(prog->fontProgLocOutlineColor, 
+                    (NV_PC_RED_FLOAT(m_outlineColor)),
+                    (NV_PC_GREEN_FLOAT(m_outlineColor)),
+                    (NV_PC_BLUE_FLOAT(m_outlineColor)),
+                    (NV_PC_ALPHA_FLOAT(m_outlineColor)) );
     }
 
     // now, switch blend mode to work for our luma-based text texture.

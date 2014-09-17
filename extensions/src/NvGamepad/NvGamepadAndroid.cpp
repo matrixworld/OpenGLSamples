@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvGamepad/NvGamepadAndroid.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -42,14 +42,8 @@ extern "C" {
 
 NvGamepadAndroid::NvGamepadAndroid() {
     mStates = new State[MAX_GAMEPADS];
-    mLastReturnedTimestamps = new uint32_t[MAX_GAMEPADS];
 
     memset(mStates, 0, MAX_GAMEPADS * sizeof(State));
-    memset(mLastReturnedTimestamps, 0, MAX_GAMEPADS * sizeof(uint32_t));
-
-    mCurrentTimestamp = 0;
-
-    uint32_t* mLastReturnedTimestamps;
 }
 
 NvGamepadAndroid::~NvGamepadAndroid() {
@@ -58,7 +52,6 @@ NvGamepadAndroid::~NvGamepadAndroid() {
 
 bool NvGamepadAndroid::getState(int32_t padID, State& state) {
     state = mStates[padID];
-    mLastReturnedTimestamps[padID] = state.mTimestamp;
 
     // For now, we assume that any pad that has sent us an event is connected.
     // This is obviously a hack, since it does not include:

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvGamepad/NvGamepadAndroid.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -80,8 +80,6 @@ public:
 protected:
     static void ProcessDPAD(AInputEvent* event, State& state);
 
-    uint32_t mCurrentTimestamp;
-    uint32_t* mLastReturnedTimestamps;
     State* mStates;
 };
 

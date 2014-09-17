@@ -203,7 +203,7 @@ namespace r3 {
 			m.Release();
 		}
 	protected:
-        ScopedMutex & operator=( const ScopedMutex & ) {}
+        ScopedMutex & operator=( const ScopedMutex & ) { return *this; }
 	};
 	
 	class ScopedMutexReverse {
@@ -216,7 +216,7 @@ namespace r3 {
 			m.Acquire();
 		}
 	protected:
-        ScopedMutexReverse & operator=( const ScopedMutexReverse & ) {}
+        ScopedMutexReverse & operator=( const ScopedMutexReverse & ) { return *this; }
 	};
 
     class ThreadBarrier

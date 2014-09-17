@@ -33,7 +33,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
 		<OutDir>./../../bin/vs2010x86\</OutDir>
-		<IntDir>./../../intermediate/OptimizationApp/vs2010x86/debug</IntDir>
+		<IntDir>./intermediate/OptimizationApp/vs2010x86/debug/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>OptimizationAppD</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -49,17 +49,17 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../OptimizationApp;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es2-aurora/OptimizationApp;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;PROFILE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3d.lib;opengl32.lib;glew32sd.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)OptimizationAppD.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2010x86;./../../../extensions/lib/vs2010x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/OptimizationAppD.exe.pdb</ProgramDatabaseFile>
@@ -74,7 +74,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
 		<OutDir>./../../bin/vs2010x86\</OutDir>
-		<IntDir>./../../intermediate/OptimizationApp/vs2010x86/release</IntDir>
+		<IntDir>./intermediate/OptimizationApp/vs2010x86/release/</IntDir>
 		<TargetExt>.exe</TargetExt>
 		<TargetName>OptimizationApp</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -91,17 +91,16 @@
 			<FloatingPointModel>Fast</FloatingPointModel>
 			<AdditionalOptions>/Oy- /Gm- /EHsc /wd4995 /wd4390 /wd4100 /wd4201 /wd4996</AdditionalOptions>
 			<Optimization>MaxSpeed</Optimization>
-			<AdditionalIncludeDirectories>./../../OptimizationApp;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>./../../es2-aurora/OptimizationApp;./../../../extensions/include;./../../../extensions/externals/include;./../../../extensions/externals/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 			<PreprocessorDefinitions>WIN32;_WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level4</WarningLevel>
-			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
-			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
 		</ClCompile>
 		<Link>
 			<AdditionalOptions>/DEBUG /MACHINE:x86 /LARGEADDRESSAWARE /NOLOGO /OPT:REF /OPT:ICF /INCREMENTAL:NO</AdditionalOptions>
-			<AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
 			<OutputFile>$(OutDir)OptimizationApp.exe</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/vs2010x86;./../../../extensions/lib/vs2010x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/OptimizationApp.exe.pdb</ProgramDatabaseFile>
@@ -115,52 +114,88 @@
 		</ProjectReference>
 	</ItemDefinitionGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\OptimizationApp\IceRevisitedRadix.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\IceRevisitedRadix.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\OptimizationApp.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\OptimizationApp.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\ParticleRenderer.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\ParticleRenderer.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\ParticleSystem.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\ParticleSystem.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\SceneRenderer.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\SceneRenderer.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\Terrain.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\Terrain.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\Upsampler.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\Upsampler.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\scene.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\scene.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\utils.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\utils.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\OptimizationApp\AppExtensions.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\AppExtensions.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\IceRevisitedRadix.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\IceRevisitedRadix.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\IceTypes.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\IceTypes.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\OptimizationApp.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\OptimizationApp.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\ParticleRenderer.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\ParticleRenderer.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\ParticleSystem.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\ParticleSystem.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\SceneFBOs.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\SceneFBOs.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\SceneInfo.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\SceneInfo.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\SceneRenderer.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\SceneRenderer.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\Shaders.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\Shaders.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\Terrain.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\Terrain.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\Upsampler.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\Upsampler.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\scene.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\scene.h">
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\utils.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\utils.h">
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\base.frag">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\base_es2.frag">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\cameraViewParticle.frag">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\cameraViewParticle_es2.frag">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\depth.frag">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\unshaded_alpha.frag">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\unshaded_solid.frag">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\upsampleBilinear.frag">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\upsampleCrossBilateral.frag">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\base.vert">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\base_es2.vert">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\cameraViewParticle.vert">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\cameraViewParticle_es2.vert">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\depth.vert">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\unshaded.vert">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\upsampleBilinear.vert">
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\upsampleCrossBilateral.vert">
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="./../../../extensions/externals/build/vs2010win32/Half.vcxproj">

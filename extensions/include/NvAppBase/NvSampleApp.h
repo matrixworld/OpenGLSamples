@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvSampleApp.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -177,6 +177,16 @@ public:
     /// \return the GL ID of the main, "onscreen" FBO
     GLuint getMainFBO() const { return mMainFBO; }
 
+#ifdef _WIN32
+	void* operator new(size_t size) {
+		return _aligned_malloc(size, 16);
+	}
+
+	void operator delete(void* p) {
+		_aligned_free(p);
+	}
+#endif
+
 protected:
     /// Test mode query.
     /// \return true if the app is running in a timed test harness
@@ -184,7 +194,7 @@ protected:
 
     // Do not override these virtuals - overide the "handle" ones above
     bool pointerInput(NvInputDeviceType::Enum device, NvPointerActionType::Enum action, 
-        uint32_t modifiers, int32_t count, NvPointerEvent* points); // we have base impl.
+        uint32_t modifiers, int32_t count, NvPointerEvent* points, int64_t timestamp=0); // we have base impl.
     bool keyInput(uint32_t code, NvKeyActionType::Enum action);
     bool characterInput(uint8_t c);
     bool gamepadChanged(uint32_t changedPadFlags);
@@ -193,6 +203,8 @@ protected:
     NvFramerateCounter *mFramerate;
     float mFrameDelta;
     NvStopWatch* mFrameTimer;
+
+    NvStopWatch* mEventTickTimer;
 
     NvStopWatch* mAutoRepeatTimer;
     uint32_t     mAutoRepeatButton;
@@ -220,13 +232,14 @@ protected:
     void baseUpdate(void);
     void baseDraw(void);
     void baseDrawUI(void);
-    void baseFocusChanged(bool focused);
     void baseHandleReaction(void);
     void logTestResults(float frameRate, int32_t frames);
 
     void SwapBuffers();
 
 private:
+    bool handleGestureEvents();
+
     GLuint mMainFBO;
     bool mUseFBOPair;
     int32_t mCurrentFBOIndex;
@@ -243,6 +256,9 @@ private:
     float mTestDuration;
     int32_t mTestRepeatFrames;
     std::string mTestName;
+    float mSumDrawTime;
+    int32_t mDrawTimeFrames;
+    float mDrawRate;
 
     enum {
         TEST_MODE_ISSUE_NONE = 0x00000000,

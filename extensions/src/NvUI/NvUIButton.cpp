@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvUI/NvUIButton.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -55,6 +55,7 @@ void NvUIButton::PrivateInit(NvUIButtonType::Enum btntype, uint32_t actionCode)
     m_action = actionCode;
     m_subcode = 0;
     m_stickyClick = false;
+    m_reactOnPress = false;
     m_reactGestureUID = NV_GESTURE_UID_INVALID;
     m_wasHit = false;
     m_failedHitUID = NV_GESTURE_UID_INVALID;
@@ -372,7 +373,8 @@ NvUIEventResponse NvUIButton::HandleEvent(const NvGestureEvent &gdata, NvUST tim
     }                
         
     // if we came this far, we're hit.  are we done?
-    if (gdata.kind & NvGestureKind::MASK_RELEASED) // we're done?
+    if ( gdata.kind & NvGestureKind::MASK_RELEASED ||
+        (m_reactOnPress && gdata.kind == NvGestureKind::PRESS) )
     {
         VERBOSE_PRINT("}}}} got release !!! !!! !!!! !!! !!!\n");
         NvUIEventResponse r = nvuiEventHandled;

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NV/NvPlatformGL.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -42,7 +42,6 @@
 
 #include <NvFoundation.h>
 
-
 #if defined(_WIN32)
 
 #define GLEW_STATIC
@@ -50,26 +49,76 @@
 #define GLFW_INCLUDE_ES2
 #include <GLFW/glfw3.h>
 
+// Emulate AEP headers
+#ifdef GL_API_LEVEL_ES3_1_AEP
+#include <NvGLESWrapper/NvWinES31AEP.h>
+#endif
+
 #elif defined(USE_REGAL)
 
 #include <Regal/GL/Regal.h>
 
+#elif defined(ANDROID)
+
+#include <EGL/egl.h>
+#ifdef GL_API_LEVEL_ES2
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#elif GL_API_LEVEL_ES3
+#include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
+#elif GL_API_LEVEL_ES3_1
+#include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
+#include <NvGLESWrapper/NvES31.h>
+
+#define NV_ES31_FUNC(ret, func, formals, actuals) \
+    GL_APICALL ret GL_APIENTRY NvRemap_ ## func formals
+#define NV_ES31_FUNC_RET(ret, func, formals, actuals) \
+    GL_APICALL ret GL_APIENTRY NvRemap_ ## func formals
+
+#include <NvGLESWrapper/NvES31Funcs.h>
+
+#elif GL_API_LEVEL_ES3_1_AEP
+#include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
+
+#include <NvGLESWrapper/NvES31.h>
+#include <NvGLESWrapper/NvES31AEP.h>
+
+#define NV_ES31_FUNC(ret, func, formals, actuals) \
+    GL_APICALL ret GL_APIENTRY NvRemap_ ## func formals
+#define NV_ES31_FUNC_RET(ret, func, formals, actuals) \
+    GL_APICALL ret GL_APIENTRY NvRemap_ ## func formals
+
+#include <NvGLESWrapper/NvES31Funcs.h>
+#include <NvGLESWrapper/NvES31AEPFuncs.h>
+
+#elif GL_API_LEVEL_GL4
+// For now - this should really be Regal
+#include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
+#else
+// For now, default to ES2, rather than an error
+//#error "No GL[ES] API level specified."
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#endif
+
 #elif defined(LINUX)
 
+#ifdef USE_FREEGLUT
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+#else
 #ifndef GLEW_NO_GLU
 #define GLEW_NO_GLU
 #endif
-
 #define GLEW_STATIC
 #include <GL/glew.h>
 #define GLFW_INCLUDE_ES2
 #include <GLFW/glfw3.h>
-
-#elif defined(ANDROID)
-
-#include <EGL/egl.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+#endif
 
 #elif defined(__APPLE__)
 // apple DEFINES all these all the time and uses 0/1 to differentiate.

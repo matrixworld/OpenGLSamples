@@ -23,7 +23,7 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-14</AndroidTargetAPI>
+		<AndroidTargetAPI>android-16</AndroidTargetAPI>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'" Label="Configuration">
 		<ConfigurationType>Application</ConfigurationType>
@@ -31,7 +31,7 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-14</AndroidTargetAPI>
+		<AndroidTargetAPI>android-16</AndroidTargetAPI>
 	</PropertyGroup>
 	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 	<ImportGroup Label="ExtensionSettings">
@@ -44,7 +44,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../bin/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/MotionBlur/Tegra-Android/debug</IntDir>
+		<IntDir>./intermediate/MotionBlur/Tegra-Android/debug/</IntDir>
 		<TargetExt>.so</TargetExt>
 		<TargetName>libMotionBlur</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -55,14 +55,14 @@
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../MotionBlur;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es2-aurora/MotionBlur;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES2;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 		</ClCompile>
 		<Link>
-			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -lGLESv2 -landroid -lm -Wl,--end-group</AdditionalOptions>
+			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -landroid -lm -lGLESv2 -Wl,--end-group</AdditionalOptions>
 			<OutputFile>$(OutDir)libMotionBlur.so</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/Tegra-Android;./../../../extensions/lib/Tegra-Android;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/libMotionBlur.so.pdb</ProgramDatabaseFile>
@@ -70,8 +70,8 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../MotionBlur</AntBuildPath>
-			<JavaSourceDir>src/../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
+			<AntBuildPath>$(ProjectDir)./../../es2-aurora/MotionBlur</AntBuildPath>
+			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
 		</AntBuild>
@@ -83,7 +83,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../bin/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/MotionBlur/Tegra-Android/release</IntDir>
+		<IntDir>./intermediate/MotionBlur/Tegra-Android/release/</IntDir>
 		<TargetExt>.so</TargetExt>
 		<TargetName>libMotionBlur</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -94,14 +94,14 @@
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../MotionBlur;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es2-aurora/MotionBlur;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES2;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
 		</ClCompile>
 		<Link>
-			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -lGLESv2 -landroid -lm -Wl,--end-group</AdditionalOptions>
+			<AdditionalOptions> -Wl,--start-group -lc -lm -lgcc -lgnustl_static -lEGL -landroid -lm -lGLESv2 -Wl,--end-group</AdditionalOptions>
 			<OutputFile>$(OutDir)libMotionBlur.so</OutputFile>
 			<AdditionalLibraryDirectories>./../../../extensions/externals/lib/Tegra-Android;./../../../extensions/lib/Tegra-Android;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<ProgramDatabaseFile>$(OutDir)/libMotionBlur.so.pdb</ProgramDatabaseFile>
@@ -109,8 +109,8 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../MotionBlur</AntBuildPath>
-			<JavaSourceDir>src/../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
+			<AntBuildPath>$(ProjectDir)./../../es2-aurora/MotionBlur</AntBuildPath>
+			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
 		</AntBuild>
@@ -125,10 +125,24 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 	</PropertyGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\MotionBlur\MotionBlur.cpp">
+		<ClCompile Include="..\..\es2-aurora\MotionBlur\MotionBlur.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\MotionBlur\MotionBlur.h">
+		<ClInclude Include="..\..\es2-aurora\MotionBlur\MotionBlur.h">
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\motionblur.frag">
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\scenecolor.frag">
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\skyboxcolor.frag">
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\motionblur.vert">
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\scenecolor.vert">
+		</None>
+		<None Include="..\..\es2-aurora\MotionBlur\assets\shaders\skyboxcolor.vert">
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="./../../../extensions/externals/build/vs2010android/Half.vcxproj">

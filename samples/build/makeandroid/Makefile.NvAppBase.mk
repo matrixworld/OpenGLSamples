@@ -15,12 +15,14 @@ NvAppBase_cppfiles   += ./../../../extensions/src/NvAppBase/NvSampleApp.cpp
 NvAppBase_cfiles   += ./../../../extensions/src/NvAppBase/NvAndroidNativeAppGlue.c
 
 NvAppBase_cpp_debug_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.debug.P, $(NvAppBase_cppfiles)))))
+NvAppBase_cc_debug_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.debug.P, $(NvAppBase_ccfiles)))))
 NvAppBase_c_debug_dep      = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.debug.P, $(NvAppBase_cfiles)))))
-NvAppBase_debug_dep      = $(NvAppBase_cpp_debug_dep) $(NvAppBase_c_debug_dep)
+NvAppBase_debug_dep      = $(NvAppBase_cpp_debug_dep) $(NvAppBase_cc_debug_dep) $(NvAppBase_c_debug_dep)
 -include $(NvAppBase_debug_dep)
 NvAppBase_cpp_release_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.release.P, $(NvAppBase_cppfiles)))))
+NvAppBase_cc_release_dep    = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.release.P, $(NvAppBase_ccfiles)))))
 NvAppBase_c_release_dep      = $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.release.P, $(NvAppBase_cfiles)))))
-NvAppBase_release_dep      = $(NvAppBase_cpp_release_dep) $(NvAppBase_c_release_dep)
+NvAppBase_release_dep      = $(NvAppBase_cpp_release_dep) $(NvAppBase_cc_release_dep) $(NvAppBase_c_release_dep)
 -include $(NvAppBase_release_dep)
 NvAppBase_debug_hpaths    := 
 NvAppBase_debug_hpaths    += ./../../../extensions/src
@@ -34,6 +36,7 @@ NvAppBase_debug_lpaths    :=
 NvAppBase_debug_defines   := $(NvAppBase_custom_defines)
 NvAppBase_debug_defines   += ANDROID
 NvAppBase_debug_defines   += _LIB
+NvAppBase_debug_defines   += GL_API_LEVEL_ES2
 NvAppBase_debug_defines   += _DEBUG
 NvAppBase_debug_libraries := 
 NvAppBase_debug_common_cflags	:= $(NvAppBase_custom_cflags)
@@ -49,14 +52,15 @@ NvAppBase_debug_lflags    += $(addprefix -L, $(NvAppBase_debug_lpaths))
 NvAppBase_debug_lflags    += -Wl,--start-group $(addprefix -l, $(NvAppBase_debug_libraries)) -Wl,--end-group
 NvAppBase_debug_objsdir  = $(OBJS_DIR)/NvAppBase_debug
 NvAppBase_debug_cpp_o    = $(addprefix $(NvAppBase_debug_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.o, $(NvAppBase_cppfiles)))))
+NvAppBase_debug_cc_o    = $(addprefix $(NvAppBase_debug_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.o, $(NvAppBase_ccfiles)))))
 NvAppBase_debug_c_o      = $(addprefix $(NvAppBase_debug_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.o, $(NvAppBase_cfiles)))))
-NvAppBase_debug_obj      = $(NvAppBase_debug_cpp_o) $(NvAppBase_debug_c_o)
+NvAppBase_debug_obj      = $(NvAppBase_debug_cpp_o) $(NvAppBase_debug_cc_o) $(NvAppBase_debug_c_o)
 NvAppBase_debug_bin      := ./../../../extensions/lib/Tegra-Android/libNvAppBaseD.a
 
 clean_NvAppBase_debug: 
-	@$(ECHO) clean NvAppBase debug
-	@$(RMDIR) $(NvAppBase_debug_objsdir)
-	@$(RMDIR) $(NvAppBase_debug_bin)
+	$(SILENT_FLAG)$(ECHO) clean NvAppBase debug
+	$(SILENT_FLAG)$(RMDIR) $(NvAppBase_debug_objsdir)
+	$(SILENT_FLAG)$(RMDIR) $(NvAppBase_debug_bin)
 
 build_NvAppBase_debug: postbuild_NvAppBase_debug
 postbuild_NvAppBase_debug: mainbuild_NvAppBase_debug
@@ -64,27 +68,37 @@ mainbuild_NvAppBase_debug: prebuild_NvAppBase_debug $(NvAppBase_debug_bin)
 prebuild_NvAppBase_debug:
 
 $(NvAppBase_debug_bin): $(NvAppBase_debug_obj) 
-	@mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvAppBaseD.a`
-	@$(AR) rcs $(NvAppBase_debug_bin) $(NvAppBase_debug_obj)
-	@$(ECHO) building $@ complete!
+	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvAppBaseD.a`
+	$(SILENT_FLAG)$(AR) rcs $(NvAppBase_debug_bin) $(NvAppBase_debug_obj)
+	$(SILENT_FLAG)$(ECHO) building $@ complete!
 
 NvAppBase_debug_DEPDIR = $(dir $(@))/$(*F)
 $(NvAppBase_debug_cpp_o): $(NvAppBase_debug_objsdir)/%.o:
-	@$(ECHO) NvAppBase: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cppfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CXX) $(NvAppBase_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cppfiles)) -o $@
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cppfiles))))))
-	@cp $(NvAppBase_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cppfiles))))).debug.P; \
+	$(SILENT_FLAG)$(ECHO) NvAppBase: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cppfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvAppBase_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cppfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cppfiles))))))
+	$(SILENT_FLAG)cp $(NvAppBase_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAppBase_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cppfiles))))).debug.P; \
 	  rm -f $(NvAppBase_debug_DEPDIR).d
 
+$(NvAppBase_debug_cc_o): $(NvAppBase_debug_objsdir)/%.o:
+	$(SILENT_FLAG)$(ECHO) NvAppBase: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_ccfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvAppBase_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_ccfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_ccfiles))))))
+	$(SILENT_FLAG)cp $(NvAppBase_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_ccfiles))))).debug.P; \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAppBase_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_ccfiles))))).debug.P; \
+	  rm -f $(NvAppBase_debug_DEPDIR).d
+
 $(NvAppBase_debug_c_o): $(NvAppBase_debug_objsdir)/%.o:
-	@$(ECHO) NvAppBase: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CC) $(NvAppBase_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cfiles)) -o $@ 
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cfiles))))))
-	@cp $(NvAppBase_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cfiles))))).debug.P; \
+	$(SILENT_FLAG)$(ECHO) NvAppBase: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CC) $(NvAppBase_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cfiles)) -o $@ 
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cfiles))))))
+	$(SILENT_FLAG)cp $(NvAppBase_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAppBase_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_debug_objsdir),, $@))), $(NvAppBase_cfiles))))).debug.P; \
 	  rm -f $(NvAppBase_debug_DEPDIR).d
@@ -101,6 +115,7 @@ NvAppBase_release_lpaths    :=
 NvAppBase_release_defines   := $(NvAppBase_custom_defines)
 NvAppBase_release_defines   += ANDROID
 NvAppBase_release_defines   += _LIB
+NvAppBase_release_defines   += GL_API_LEVEL_ES2
 NvAppBase_release_defines   += NDEBUG
 NvAppBase_release_libraries := 
 NvAppBase_release_common_cflags	:= $(NvAppBase_custom_cflags)
@@ -116,14 +131,15 @@ NvAppBase_release_lflags    += $(addprefix -L, $(NvAppBase_release_lpaths))
 NvAppBase_release_lflags    += -Wl,--start-group $(addprefix -l, $(NvAppBase_release_libraries)) -Wl,--end-group
 NvAppBase_release_objsdir  = $(OBJS_DIR)/NvAppBase_release
 NvAppBase_release_cpp_o    = $(addprefix $(NvAppBase_release_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cpp, %.cpp.o, $(NvAppBase_cppfiles)))))
+NvAppBase_release_cc_o    = $(addprefix $(NvAppBase_release_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.cc, %.cc.o, $(NvAppBase_ccfiles)))))
 NvAppBase_release_c_o      = $(addprefix $(NvAppBase_release_objsdir)/, $(subst ./, , $(subst ../, , $(patsubst %.c, %.c.o, $(NvAppBase_cfiles)))))
-NvAppBase_release_obj      = $(NvAppBase_release_cpp_o) $(NvAppBase_release_c_o)
+NvAppBase_release_obj      = $(NvAppBase_release_cpp_o) $(NvAppBase_release_cc_o) $(NvAppBase_release_c_o)
 NvAppBase_release_bin      := ./../../../extensions/lib/Tegra-Android/libNvAppBase.a
 
 clean_NvAppBase_release: 
-	@$(ECHO) clean NvAppBase release
-	@$(RMDIR) $(NvAppBase_release_objsdir)
-	@$(RMDIR) $(NvAppBase_release_bin)
+	$(SILENT_FLAG)$(ECHO) clean NvAppBase release
+	$(SILENT_FLAG)$(RMDIR) $(NvAppBase_release_objsdir)
+	$(SILENT_FLAG)$(RMDIR) $(NvAppBase_release_bin)
 
 build_NvAppBase_release: postbuild_NvAppBase_release
 postbuild_NvAppBase_release: mainbuild_NvAppBase_release
@@ -131,30 +147,40 @@ mainbuild_NvAppBase_release: prebuild_NvAppBase_release $(NvAppBase_release_bin)
 prebuild_NvAppBase_release:
 
 $(NvAppBase_release_bin): $(NvAppBase_release_obj) 
-	@mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvAppBase.a`
-	@$(AR) rcs $(NvAppBase_release_bin) $(NvAppBase_release_obj)
-	@$(ECHO) building $@ complete!
+	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvAppBase.a`
+	$(SILENT_FLAG)$(AR) rcs $(NvAppBase_release_bin) $(NvAppBase_release_obj)
+	$(SILENT_FLAG)$(ECHO) building $@ complete!
 
 NvAppBase_release_DEPDIR = $(dir $(@))/$(*F)
 $(NvAppBase_release_cpp_o): $(NvAppBase_release_objsdir)/%.o:
-	@$(ECHO) NvAppBase: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cppfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CXX) $(NvAppBase_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cppfiles)) -o $@
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cppfiles))))))
-	@cp $(NvAppBase_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cppfiles))))).release.P; \
+	$(SILENT_FLAG)$(ECHO) NvAppBase: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cppfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvAppBase_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cppfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cppfiles))))))
+	$(SILENT_FLAG)cp $(NvAppBase_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAppBase_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cppfiles))))).release.P; \
 	  rm -f $(NvAppBase_release_DEPDIR).d
 
+$(NvAppBase_release_cc_o): $(NvAppBase_release_objsdir)/%.o:
+	$(SILENT_FLAG)$(ECHO) NvAppBase: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_ccfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CXX) $(NvAppBase_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_ccfiles)) -o $@
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_ccfiles))))))
+	$(SILENT_FLAG)cp $(NvAppBase_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_ccfiles))))).release.P; \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAppBase_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_ccfiles))))).release.P; \
+	  rm -f $(NvAppBase_release_DEPDIR).d
+
 $(NvAppBase_release_c_o): $(NvAppBase_release_objsdir)/%.o:
-	@$(ECHO) NvAppBase: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cfiles))...
-	@mkdir -p $(dir $(@))
-	@$(CC) $(NvAppBase_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cfiles)) -o $@ 
-	@mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cfiles))))))
-	@cp $(NvAppBase_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cfiles))))).release.P; \
+	$(SILENT_FLAG)$(ECHO) NvAppBase: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cfiles))...
+	$(SILENT_FLAG)mkdir -p $(dir $(@))
+	$(SILENT_FLAG)$(CC) $(NvAppBase_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cfiles)) -o $@ 
+	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cfiles))))))
+	$(SILENT_FLAG)cp $(NvAppBase_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvAppBase_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvAppBase_release_objsdir),, $@))), $(NvAppBase_cfiles))))).release.P; \
 	  rm -f $(NvAppBase_release_DEPDIR).d
 
 clean_NvAppBase:  clean_NvAppBase_debug clean_NvAppBase_release
-	@rm -rf $(DEPSDIR)
+	$(SILENT_FLAG)rm -rf $(DEPSDIR)

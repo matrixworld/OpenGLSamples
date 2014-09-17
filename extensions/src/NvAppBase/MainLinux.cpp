@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/MainLinux.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -142,6 +142,7 @@ public:
         glfwWindowHint(GLFW_ALPHA_BITS, config.alphaBits);
         glfwWindowHint(GLFW_DEPTH_BITS, config.depthBits);
         glfwWindowHint(GLFW_STENCIL_BITS, config.stencilBits);
+        glfwWindowHint(GLFW_SAMPLES, config.msaaSamples);
     }
 
     void setWindow(GLFWwindow* window) {
@@ -204,7 +205,11 @@ protected:
 
 class NvLinuxPlatformContext : public NvPlatformContext {
 public:
-    NvLinuxPlatformContext() : mWindow(NULL), mGamepad(new NvGamepadLinux) { }
+    NvLinuxPlatformContext() : 
+        mWindow(NULL), 
+        mGamepad(new NvGamepadLinux),
+        mRenderOnDemand(false),
+        mRenderRequested(false) { }
     ~NvLinuxPlatformContext() { delete mGamepad; }
 
     void setWindow(GLFWwindow* window) {
@@ -222,10 +227,16 @@ public:
     virtual void setAppTitle(const char* title) { if (mWindow) glfwSetWindowTitle(mWindow, title); }
     virtual const std::vector<std::string>& getCommandLine() { return m_commandLine; }
 
+    virtual NvRedrawMode::Enum getRedrawMode() { return mRenderOnDemand ? NvRedrawMode::ON_DEMAND : NvRedrawMode::UNBOUNDED; }
+    virtual void setRedrawMode(NvRedrawMode::Enum mode) { mRenderOnDemand = (mode == NvRedrawMode::ON_DEMAND); }
+    virtual void requestRedraw() { mRenderRequested = true; }
+
     std::vector<std::string> m_commandLine;
 protected:
     GLFWwindow* mWindow;
     NvGamepadLinux* mGamepad;
+    bool mRenderOnDemand;
+    bool mRenderRequested;
 };
 
 bool NvLinuxPlatformContext::isAppRunning() {
@@ -252,7 +263,12 @@ bool NvLinuxPlatformContext::shouldRender() {
         if (sForcedRenderCount > 0)
             sForcedRenderCount--;
 
-        return true;
+        if (!mRenderOnDemand || mRenderRequested) {
+            mRenderRequested = false;
+            return true;
+        } else {
+            return false;
+        }
     }
     return false;
 }
@@ -406,10 +422,12 @@ NvStopWatch* NvAppBase::createStopWatch() {
     return new NvLinuxStopWatch;
 }
 
-bool NvAppBase::showDialog(const char*, const char *, bool exitApp) {
-    return false;
+bool NvAppBase::showDialog(const char* title, const char *text, bool exitApp) {
+    fprintf(stdout, "%s: %s\n", title, text);
+    if (exitApp)
+        exit(-1);
+    return true;
 }
-
 bool NvAppBase::writeScreenShot(int32_t, int32_t, const uint8_t*, const std::string&) {
     return false;
 }

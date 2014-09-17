@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvUI/NvTweakBar.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -271,7 +271,7 @@ NvUIGraphic *NvTweakBar::MakeFocusFrame()
 
 //======================================================================
 //======================================================================
-NvUIPopup *NvTweakBar::MakeStdPopup(const char* name, NvTweakEnumVar<uint32_t> &refvar, NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode/*==0*/)
+NvUIPopup *NvTweakBar::MakeStdPopup(const char* name, NvTweakEnumVar<uint32_t> &refvar, const NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode/*==0*/)
 {
     uint32_t code = actionCode==0?++m_lastActionCode:actionCode; // need to stash code so all radios use the same
     float wide = GetDefaultLineWidth();
@@ -682,7 +682,7 @@ NvTweakVarBase* NvTweakBar::addValue(const char *name, uint32_t &var, uint32_t m
 }
 
 
-NvTweakVarBase* NvTweakBar::addEnum(const char *name, uint32_t &var, NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode/*==0*/)
+NvTweakVarBase* NvTweakBar::addEnum(const char *name, uint32_t &var, const NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode/*==0*/)
 {
     if (debugForceMenu || (m_compactLayout && valueCount > ENUM_COUNT_THRESH_FOR_COMPACT_MENU)) {
         return addMenu(name, var, values, valueCount, actionCode);
@@ -721,7 +721,7 @@ NvTweakVarBase* NvTweakBar::addEnum(const char *name, uint32_t &var, NvTweakEnum
 }
 
 
-NvTweakVarBase* NvTweakBar::addMenu(const char *name, uint32_t &var, NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode/*==0*/)
+NvTweakVarBase* NvTweakBar::addMenu(const char *name, uint32_t &var, const NvTweakEnum<uint32_t> values[], uint32_t valueCount, uint32_t actionCode/*==0*/)
 {
     uint32_t minval = 0xFFFFFFFF, maxval = 0;
     for (uint32_t i=0; i<valueCount; i++)

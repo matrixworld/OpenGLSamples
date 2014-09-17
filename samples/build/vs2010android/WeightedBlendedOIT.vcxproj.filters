@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="src"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\gl4-kepler\WeightedBlendedOIT\WeightedBlendedOIT.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClInclude Include="..\..\gl4-kepler\WeightedBlendedOIT\WeightedBlendedOIT.h">
+			<Filter>src</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\gl4-kepler\WeightedBlendedOIT\assets\shaders\base_shade_vertex.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\gl4-kepler\WeightedBlendedOIT\assets\shaders\base_vertex.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\gl4-kepler\WeightedBlendedOIT\assets\shaders\front_peeling_blend_fragment.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\gl4-kepler\WeightedBlendedOIT\assets\shaders\front_peeling_final_fragment.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\gl4-kepler\WeightedBlendedOIT\assets\shaders\front_peeling_init_fragment.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\gl4-kepler\WeightedBlendedOIT\assets\shaders\front_peeling_peel_fragment.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\gl4-kepler\WeightedBlendedOIT\assets\shaders\shade_fragment.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\gl4-kepler\WeightedBlendedOIT\assets\shaders\weighted_blend_fragment.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\gl4-kepler\WeightedBlendedOIT\assets\shaders\weighted_final_fragment.glsl">
+			<Filter>shaders</Filter>
+		</None>
+	</ItemGroup>
+</Project>

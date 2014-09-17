@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/MainWin32.cpp
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -51,6 +51,19 @@
 
 #include "NV/NvTokenizer.h"
 #include "NV/NvLogs.h"
+
+// From http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf
+// Global Variable NvOptimusEnablement (new in Driver Release 302) Starting
+// with the Release 302 drivers, application developers can direct the
+// Optimus driver at runtime to use the High Performance Graphics to render
+// any application--even those applications for which there is no existing
+// application profile. They can do this by exporting a global variable named
+// NvOptimusEnablement. The Optimus driver looks for the existence and value
+// of the export. Only the LSB of the DWORD matters at this time. A value
+// of 0x00000001 indicates that rendering should be performed using High
+// Performance Graphics. A value of 0x00000000 indicates that this method
+// should be ignored.
+extern "C" {   _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001; }
 
 void NVWindowsLog(const char* fmt, ...) {
  
@@ -179,6 +192,7 @@ public:
         glfwWindowHint(GLFW_ALPHA_BITS, config.alphaBits);
         glfwWindowHint(GLFW_DEPTH_BITS, config.depthBits);
         glfwWindowHint(GLFW_STENCIL_BITS, config.stencilBits);
+        glfwWindowHint(GLFW_SAMPLES, config.msaaSamples);
     }
 
     void setWindow(GLFWwindow* window) {
@@ -241,7 +255,11 @@ protected:
 
 class NvWin32PlatformContext : public NvPlatformContext {
 public:
-    NvWin32PlatformContext() : mWindow(NULL), mGamepad(new NvGamepadXInput) { }
+    NvWin32PlatformContext() : 
+        mWindow(NULL), 
+        mGamepad(new NvGamepadXInput),
+        mRenderOnDemand(false),
+        mRenderRequested(false) { }
     ~NvWin32PlatformContext() { delete mGamepad; }
 
     void setWindow(GLFWwindow* window) { mWindow = window; }
@@ -257,10 +275,16 @@ public:
     virtual void setAppTitle(const char* title) { if (mWindow) glfwSetWindowTitle(mWindow, title); }
     virtual const std::vector<std::string>& getCommandLine() { return m_commandLine; }
 
+    virtual NvRedrawMode::Enum getRedrawMode() { return mRenderOnDemand ? NvRedrawMode::ON_DEMAND : NvRedrawMode::UNBOUNDED; }
+    virtual void setRedrawMode(NvRedrawMode::Enum mode) { mRenderOnDemand = (mode == NvRedrawMode::ON_DEMAND); }
+    virtual void requestRedraw() { mRenderRequested = true; }
+
     std::vector<std::string> m_commandLine;
 protected:
     GLFWwindow* mWindow;
     NvGamepadXInput* mGamepad;
+    bool mRenderOnDemand;
+    bool mRenderRequested;
 };
 
 
@@ -287,7 +311,12 @@ bool NvWin32PlatformContext::shouldRender() {
         if (sForcedRenderCount > 0)
             sForcedRenderCount--;
 
-        return true;
+        if (!mRenderOnDemand || mRenderRequested) {
+            mRenderRequested = false;
+            return true;
+        } else {
+            return false;
+        }
     }
     //return false;
 }
@@ -463,7 +492,8 @@ uint64_t NvAppBase::queryPerformanceCounterFrequency() {
 
 bool NvAppBase::showDialog(const char* title, const char * content, bool exitApp) {
     MessageBox(NULL, content, title, MB_OK);
-    getPlatformContext()->requestExit();
+    if (exitApp)
+        getPlatformContext()->requestExit();
     return true;
 }
 

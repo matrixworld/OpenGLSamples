@@ -5,74 +5,131 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\OptimizationApp\IceRevisitedRadix.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\IceRevisitedRadix.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\OptimizationApp.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\OptimizationApp.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\ParticleRenderer.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\ParticleRenderer.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\ParticleSystem.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\ParticleSystem.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\SceneRenderer.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\SceneRenderer.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\Terrain.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\Terrain.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\Upsampler.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\Upsampler.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\scene.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\scene.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\OptimizationApp\utils.cpp">
+		<ClCompile Include="..\..\es2-aurora\OptimizationApp\utils.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\OptimizationApp\AppExtensions.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\AppExtensions.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\IceRevisitedRadix.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\IceRevisitedRadix.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\IceTypes.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\IceTypes.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\OptimizationApp.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\OptimizationApp.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\ParticleRenderer.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\ParticleRenderer.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\ParticleSystem.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\ParticleSystem.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\SceneFBOs.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\SceneFBOs.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\SceneInfo.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\SceneInfo.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\SceneRenderer.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\SceneRenderer.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\Shaders.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\Shaders.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\Terrain.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\Terrain.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\Upsampler.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\Upsampler.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\scene.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\scene.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\OptimizationApp\utils.h">
+		<ClInclude Include="..\..\es2-aurora\OptimizationApp\utils.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\base.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\base_es2.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\cameraViewParticle.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\cameraViewParticle_es2.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\depth.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\unshaded_alpha.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\unshaded_solid.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\upsampleBilinear.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\upsampleCrossBilateral.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\base.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\base_es2.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\cameraViewParticle.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\cameraViewParticle_es2.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\depth.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\unshaded.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\upsampleBilinear.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\OptimizationApp\assets\shaders\upsampleCrossBilateral.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

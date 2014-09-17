@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvAppBase.h
-// SDK Version: v1.2 
+// SDK Version: v2.0 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
@@ -121,7 +121,7 @@ public:
     // Return true if the app has handled the action, or false if the system
     // should process further as a fallback.  Calls are optional
     virtual bool handlePointerInput(NvInputDeviceType::Enum device, NvPointerActionType::Enum action, 
-        uint32_t modifiers, int32_t count, NvPointerEvent* points) { return false; }
+        uint32_t modifiers, int32_t count, NvPointerEvent* points, int64_t timestamp=0) { return false; }
     virtual bool handleKeyInput(uint32_t code, NvKeyActionType::Enum action) { return false; }
     virtual bool handleCharacterInput(uint8_t c) { return false; }
     virtual bool handleGamepadChanged(uint32_t changedPadFlags) { return false; }

@@ -44,7 +44,7 @@
 	</ImportGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../lib/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/NvEGLUtil/Tegra-Android/debug</IntDir>
+		<IntDir>./intermediate/NvEGLUtil/Tegra-Android/debug/</IntDir>
 		<TargetExt>.a</TargetExt>
 		<TargetName>libNvEGLUtilD</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -56,7 +56,7 @@
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
 			<AdditionalIncludeDirectories>./../../src/NvEGLUtil;./../../include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>ANDROID;_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<PreprocessorDefinitions>ANDROID;_LIB;GL_API_LEVEL_ES2;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
@@ -75,7 +75,7 @@
 	</ItemDefinitionGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 		<OutDir>$(ProjectDir)./../../lib/Tegra-Android\</OutDir>
-		<IntDir>./../../intermediate/NvEGLUtil/Tegra-Android/release</IntDir>
+		<IntDir>./intermediate/NvEGLUtil/Tegra-Android/release/</IntDir>
 		<TargetExt>.a</TargetExt>
 		<TargetName>libNvEGLUtil</TargetName>
 		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -87,7 +87,7 @@
 			<FloatingPointModel>Precise</FloatingPointModel>
 			<Optimization>Disabled</Optimization>
 			<AdditionalIncludeDirectories>./../../src/NvEGLUtil;./../../include;./../../../../../../../../../../../../../platforms/android-14/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>ANDROID;_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<PreprocessorDefinitions>ANDROID;_LIB;GL_API_LEVEL_ES2;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>

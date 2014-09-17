@@ -5,34 +5,34 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\FeedbackParticlesApp\FeedbackParticlesApp.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\FeedbackParticlesApp.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\FeedbackParticlesApp\FeedbackParticlesScene.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\FeedbackParticlesScene.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\FeedbackParticlesApp\ParticleSystem.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\ParticleSystem.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\FeedbackParticlesApp\TextureUtils.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\TextureUtils.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\FeedbackParticlesApp\Utils.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\FeedbackParticlesApp\Utils.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\FeedbackParticlesApp\FeedbackParticlesApp.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\FeedbackParticlesApp.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\FeedbackParticlesApp\FeedbackParticlesScene.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\FeedbackParticlesScene.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\FeedbackParticlesApp\ParticleSystem.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\ParticleSystem.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\FeedbackParticlesApp\TextureUtils.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\TextureUtils.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\FeedbackParticlesApp\Utils.h">
+		<ClInclude Include="..\..\es3aep-kepler\FeedbackParticlesApp\Utils.h">
 			<Filter>src</Filter>
 		</ClInclude>
 	</ItemGroup>

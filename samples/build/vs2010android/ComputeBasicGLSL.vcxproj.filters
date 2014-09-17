@@ -5,11 +5,26 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\ComputeBasicGLSL\ComputeBasicGLSL.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\ComputeBasicGLSL\ComputeBasicGLSL.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\ComputeBasicGLSL\ComputeBasicGLSL.h">
+		<ClInclude Include="..\..\es3aep-kepler\ComputeBasicGLSL\ComputeBasicGLSL.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es3aep-kepler\ComputeBasicGLSL\assets\shaders\invert.glsl">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeBasicGLSL\assets\shaders\plain.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3aep-kepler\ComputeBasicGLSL\assets\shaders\plain.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>

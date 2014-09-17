@@ -5,50 +5,92 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\ParticleUpsampling\IceRevisitedRadix.cpp">
+		<ClCompile Include="..\..\es2-aurora\ParticleUpsampling\IceRevisitedRadix.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ParticleUpsampling\ParticleRenderer.cpp">
+		<ClCompile Include="..\..\es2-aurora\ParticleUpsampling\ParticleRenderer.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ParticleUpsampling\ParticleSystem.cpp">
+		<ClCompile Include="..\..\es2-aurora\ParticleUpsampling\ParticleSystem.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ParticleUpsampling\ParticleUpsampling.cpp">
+		<ClCompile Include="..\..\es2-aurora\ParticleUpsampling\ParticleUpsampling.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ParticleUpsampling\SceneRenderer.cpp">
+		<ClCompile Include="..\..\es2-aurora\ParticleUpsampling\SceneRenderer.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\ParticleUpsampling\Upsampler.cpp">
+		<ClCompile Include="..\..\es2-aurora\ParticleUpsampling\Upsampler.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClInclude Include="..\..\ParticleUpsampling\IceRevisitedRadix.h">
+		<ClInclude Include="..\..\es2-aurora\ParticleUpsampling\IceRevisitedRadix.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ParticleUpsampling\ParticleRenderer.h">
+		<ClInclude Include="..\..\es2-aurora\ParticleUpsampling\ParticleRenderer.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ParticleUpsampling\ParticleSystem.h">
+		<ClInclude Include="..\..\es2-aurora\ParticleUpsampling\ParticleSystem.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ParticleUpsampling\ParticleUpsampling.h">
+		<ClInclude Include="..\..\es2-aurora\ParticleUpsampling\ParticleUpsampling.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ParticleUpsampling\SceneFBOs.h">
+		<ClInclude Include="..\..\es2-aurora\ParticleUpsampling\SceneFBOs.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ParticleUpsampling\SceneInfo.h">
+		<ClInclude Include="..\..\es2-aurora\ParticleUpsampling\SceneInfo.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ParticleUpsampling\SceneRenderer.h">
+		<ClInclude Include="..\..\es2-aurora\ParticleUpsampling\SceneRenderer.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ParticleUpsampling\Shaders.h">
+		<ClInclude Include="..\..\es2-aurora\ParticleUpsampling\Shaders.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\ParticleUpsampling\Upsampler.h">
+		<ClInclude Include="..\..\es2-aurora\ParticleUpsampling\Upsampler.h">
 			<Filter>src</Filter>
 		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="shaders"><!--  -->
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\cameraViewParticle.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\lightViewParticle.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\opaqueColor.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\opaqueDepth.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\upsampleBilinear.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\upsampleCrossBilateral.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\cameraViewParticle.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\lightViewParticle.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\opaqueColor.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\opaqueDepth.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\upsampleBilinear.vert">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es2-aurora\ParticleUpsampling\assets\shaders\upsampleCrossBilateral.vert">
+			<Filter>shaders</Filter>
+		</None>
 	</ItemGroup>
 </Project>
